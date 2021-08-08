@@ -1,0 +1,19 @@
+############################################################################################################
+
+rate di eventi -> rate * tempo = Numero Totale Atteso 
+lo metto nel parametro lam a riga 122 e/o 123 H_NPL_train.py
+
+N_ref è il numero totale di dati nel file di reference (riga 128-132)
+
+dfHiggs['process']==2 potrebbe essere 'FPGA' == 0 o 1
+
+per normalizzare il numero di canali divido per la media 
+
+---------------------------------------------------
+ feature canali da 0 a 127 'fake' pesati dall'occupanza che calcolo volta per volta
+ il peso deve essere l'occupanza * tempo di acquisizione dati / tempo di acquisizione reference 
+ 
+ predo il reference e lo suddivido in 100 toys -> faccio andare l'algoritmo così 
+ per ogni toy ottengo una stima di t -> istogramma 
+ 
+ 

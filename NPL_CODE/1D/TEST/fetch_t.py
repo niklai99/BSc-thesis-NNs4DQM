@@ -140,7 +140,7 @@ def main():
     
     OUTPUT_DIR = args.output
     TOYS = args.toys
-    WCLIP = 100.0
+    WCLIP = 7.0
     STD_DIR_NAME = f'1D_patience1000_ref40000_bkg4000_sig0_epochs100000_latent3_layers1_wclip{WCLIP}'
     STD_FILE_NAME = f'1D_patience1000_ref40000_bkg4000_sig0_toy{TOYS}_t.txt' 
     

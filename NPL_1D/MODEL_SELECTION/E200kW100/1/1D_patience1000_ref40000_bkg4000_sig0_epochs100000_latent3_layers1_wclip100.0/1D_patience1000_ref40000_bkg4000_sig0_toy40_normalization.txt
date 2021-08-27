@@ -1,0 +1,1 @@
+Exponential standardization -> Mean: 0.12461811606004267

@@ -1,0 +1,32 @@
+\documentclass[a4paper,11pt,openright,twoside]{book}
+
+\input{TeX/packages.tex}
+\input{TeX/settings.tex}
+\input{TeX/newcommands.tex}
+
+
+\begin{document}
+
+    % FRONTMATTER
+    \frontmatter
+    \input{TeX/frontespizio.tex}
+    \input{TeX/quote.tex}
+    \input{TeX/abstract.tex}
+    \clearpage{\pagestyle{empty}\cleardoublepage}
+
+    % INDICE
+    \tableofcontents
+    \clearpage{\pagestyle{empty}\cleardoublepage}
+
+    % MAINMATTER
+    \mainmatter
+    \input{TeX/introduzione.tex}
+    \input{TeX/algorithm.tex}
+    \input{TeX/experiment.tex}
+    \input{TeX/results.tex}
+    \input{TeX/conclusioni.tex}
+    
+    % BIBLIOGRAFIA
+    \input{TeX/bibliography.tex}
+
+\end{document}

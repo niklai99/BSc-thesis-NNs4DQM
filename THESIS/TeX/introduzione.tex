@@ -2,7 +2,7 @@
 % \addcontentsline{toc}{chapter}{Introduction} \markboth{INTRODUCTION}{}
 \label{chap:Introduction}
 
-\section{Machine Learning applications in High Energy Physics}
+% \section{Machine Learning applications in High Energy Physics}
 
 Particle Physics, also known as High Energy Physics (HEP), is the branch of physics that studies the nature of the
 particles that costitute matter and radiation. Its development can be located starting from the second half of the
@@ -17,21 +17,32 @@ In order to interrogate experimental data in the search for New Physics (NP), sc
 employing a model-dependet approach (i.e. searching for specific NP models) has a critical disadvantage: a statistical
 test which is designed to be sensitive to one specific hypothesis is typically insensitive to data departures of a
 different nature from the one expected. This means that if new physics is present in the data, but not predicted by the
-specific NP model that is being tested, it would not be discovered.\\
-
-A modern approach that overcomes the difficulties underlined above is the so called model-indipendent approach. For the
-sake of clarity, in the context of statistics, testing one hypothesis requires an alternative hypothesis to be compared
-with. In physics, a model is a set of physical laws that make us able to predict the distribution of a certain feature
-depending on free parameters. We thus define a certain approach 'model-independent' if the alternative distributions do
-not follow from a physical model. It means that the distributions can adapt to the true underlying data distribution for
-an appropriate choice of the free parameters. The main reason for which we demand a model-independent approach is the
-advantage of sensitivity to a large variety of new physics scenarios.\\
+specific NP model that is being tested, it would not be discovered. A modern approach that overcomes the difficulties
+underlined above is the so called model-indipendent approach. We define a certain approach "model-independent" if we are
+not testing any specific physical model against our data. The main reason for which we demand a model-independent
+approach is the advantage of sensitivity to a large variety of new physics scenarios.\\
 
 In the realm of HEP, Machine Learning (ML) techniques has been used since early $2000$ (traditionally known as
 Multivariate Analysis) in many crucial tasks, such as event classification, track reconstruction and particle
-identification. 
+identification. In recent years, a Deep Learning algorithm has been developed in order to search for New Physics beyond
+the Standard Model. Such algorithm outlines a model-indipendent approach by exploiting Neural Networks (NN) with multiple
+hidden layers.\\
+
+Although the above algorithm (which we will call the "NPL algorithm") looks promising in finding discrepancies, hidden
+within our datasets, between collected data and SM predictions, the same approach can be taken to perform data quality
+monitoring tasks. The main topic of this work is, in fact, the application of this Deep Learning algorithm to constantly
+check whether the detector is collecting High Quality data (i.e. the detector is working as expected) or data
+acquisition is compromised in some way. We would like to emphasize the importance of being able to accurately
+discriminate High Quality (HQ) data from Low Quality (LQ) data: while the former is our gold mine, in which we hope to find
+answers to the unresolved questions above, the latter is a complete waste of time. Lastly, we remind that our approach
+to Data Quality Monitoring is model-indipendent, meaning that, in this field of application, we are not asked to make
+assumptions on how data could be affected if the detector stops collecting HQ data, leading to a remarkable sensibility
+to a large variety of LQ data acquisitions.
 
 
 
-\section{Data Quality Monitoring}
+% \section{Data Quality Monitoring}
+
+
+
 

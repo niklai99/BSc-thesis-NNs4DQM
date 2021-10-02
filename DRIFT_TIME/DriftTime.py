@@ -29,7 +29,6 @@ class DriftTime:
         self.stream = pd.read_csv(self.input_file, sep=' ')
         
         print('Data imported successfully')
- 
         
         
     def compute_time(self):
@@ -59,7 +58,7 @@ class DriftTime:
     
     
     def compute_dt(self):
-        '''calcola il tempo di deriva'''
+        '''calcola il tempo di deriva, restituisce solamente il tempo di deriva'''
         
         def is_unique(s):
             '''funzione usata per controllare che in un array ci sia solo un unico valore'''
@@ -98,17 +97,96 @@ class DriftTime:
     
     
     
+    def compute_dt_dataframe(self):
+        '''calcola il tempo di deriva, restituisce il dataframe completo ed il tempo di deriva è una nuova colonna'''
+        
+        def is_unique(s):
+            '''funzione usata per controllare che in un array ci sia solo un unico valore'''
+            a = s.to_numpy()
+            return (a[0] == a).all()
+        
+        # lista per contenere i tempi di deriva 
+        self.drift_df = pd.DataFrame()
+        
+        
+        print('\nComputing drift time...')
+        # per ogni segnale misurato dallo scintillatore
+        for i, trig_orb_cnt in enumerate(self.trig['ORBIT_CNT']):
+            # chiamo 'event' il dataframe contentente tutti i dati con stesso ORBIT_CNT dello scintillatore i-esimo
+            # escludendo i segnali dello scintillatore (TDC_CHANNEL 128)
+            event = self.data[(self.data['ORBIT_CNT']==trig_orb_cnt)]
+
+            # IMPORTANTE: controlla che l'evento non sia vuoto
+            # se l'evento è vuoto vuol dire che non c'è alcun segnale che abbia ORBIT_CNT uguale al trigger
+            if event.empty:
+                continue
+
+            # controllo che gli ORBIT_CNT nell'evento siano uguali e coincidano con quello dello scintillatore
+            if (is_unique(event['ORBIT_CNT'])) and (event['ORBIT_CNT'].iloc[0]==trig_orb_cnt):   
+                # calcolo la drift time come (tempo dati - tempo scintillatore i-esimo)
+                event['DRIFT_TIME'] = event['TIME'] - self.trig.loc[i, 'TIME']
+                # aggiungo alla lista le drift time dell'evento i-esimo 
+                self.drift_df = self.drift_df.append(event, ignore_index=True)
+
+        print('Drift time computed')
+    
+        return self.drift_df
+    
+    
+    
+    def select_ndata(self, ndata: int = -1)
+        '''selezione il numero di righe da analizzare'''
+        
+        self.data = self.stream[:ndata]
+        
+
+    
+    def add_trigger_flag(self):
+        '''aggiunge un flag booleano (1 o 0) in base alla natura della riga'''
+        
+        self.data = self.data.drop(self.data[(self.data['FPGA']==0) & (self.data['TDC_CHANNEL']==128)].index)
+        self.data['IS_TRIG'] = np.where((self.data['FPGA']==1) & (self.data['TDC_CHANNEL']==128), 1, 0)
+        
+        
+    
+    def compute_dt_full(self):
+        '''calcola il tempo di deriva restituendo l intero dataframe raw di partenza'''
+        
+        # dataframe finale
+        self.drift_df = pd.DataFrame()
+        
+        group_data = self.data.groupby(by=['ORBIT_CNT'])
+        
+        for orb, event in group_data:
+            # SE nel gruppo c'è un trigger value
+            if 1 in event['IS_TRIG'].values and event['IS_TRIG'].value_counts().loc[1]==1:
+                # calcola la drift time 
+                event['DRIFT_TIME'] = event['TIME'] - event[event['IS_TRIG']==1].iloc[0]['TIME']
+                # rimpiazza lo 0 che viene fuori dal trigger con un NaN
+                event['DRIFT_TIME'].replace(0, np.nan, inplace=True)
+            # SE nel gruppo non c'è il trigger value
+            elif 1 not in event['IS_TRIG'].values:
+                # metti NaN come drift time
+                event['DRIFT_TIME'] = np.nan
+
+            self.drift_df = self.drift_df.append(event)
+            
+        return self.drift_df
+    
+    
+    
     def cut_dt(self, df, left_bound: float, right_bound: float):
         '''elimina il rumore agli estremi della distribuzione'''
         
         # definisco due maschere per tagliare la distribuzione 
-        left_mask = self.drift_time > left_bound
-        right_mask = self.drift_time < right_bound
+        left_mask = df['DRIFT_TIME'] > left_bound
+        right_mask = df['DRIFT_TIME'] < right_bound
         
         # applico le maschere
-        self.drift_time_cut = df[(left_mask & right_mask)]
+#         self.drift_time_cut = df[(left_mask & right_mask)]
+        df = df[(left_mask & right_mask)]
         
-        return self.drift_time_cut
+        return df # self.drift_time_cut
     
     
     
@@ -116,9 +194,10 @@ class DriftTime:
         '''shifta la distribuzione di un offset costante dovuto alla calibrazione del detector'''
         
         # shift della distribuzione di un offset costante
-        self.drift_time_shifted = df + offset
+#         self.drift_time_shifted = df + offset
+        df['DRIFT_TIME'] = df['DRIFT_TIME'] + offset
         
-        return self.drift_time_shifted
+        return df # self.drift_time_shifted
         
        
     
@@ -160,6 +239,7 @@ class DriftTime:
         fig.savefig(plot_path+file_name, facecolor = 'white')
         
         
+        
     def make_comparison_plot(self, df_raw, df_shifted, left_bound: float, right_bound: float, tag: str):
         '''crea e salva i grafici'''
         
@@ -172,8 +252,7 @@ class DriftTime:
             title = old_legend.get_title().get_text()
 
             ax.legend(handles, labels, loc=new_loc, title=title, fontsize=fontsize, title_fontsize=titlesize, frameon = True, fancybox = False, framealpha = 0.5, **kws)
-
-            return
+            
         
         # creo figure&axes
         fig, ax = plt.subplots(figsize=(14,8))

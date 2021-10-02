@@ -1,0 +1,5 @@
+2021-10-02 12:31:32.642580: I tensorflow/core/platform/cpu_feature_guard.cc:143] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2
+2021-10-02 12:31:32.678554: I tensorflow/core/platform/profile_utils/cpu_utils.cc:102] CPU Frequency: 2260910000 Hz
+2021-10-02 12:31:32.686792: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x5583b633bfd0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-10-02 12:31:32.686878: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2021-10-02 12:31:32.687092: I tensorflow/core/common_runtime/process_util.cc:147] Creating new thread pool with default inter op setting: 16. Tune using inter_op_parallelism_threads for best performance.

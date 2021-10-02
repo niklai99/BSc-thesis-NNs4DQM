@@ -1,0 +1,4 @@
+2021-10-02 06:31:05.820640: I tensorflow/core/platform/profile_utils/cpu_utils.cc:102] CPU Frequency: 2200110000 Hz
+2021-10-02 06:31:05.823827: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55e59debc320 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-10-02 06:31:05.823947: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2021-10-02 06:31:05.824164: I tensorflow/core/common_runtime/process_util.cc:147] Creating new thread pool with default inter op setting: 24. Tune using inter_op_parallelism_threads for best performance.

@@ -1,0 +1,7 @@
+executable = condor1633176426.0386522/1252.src
+universe = vanilla
+output = condor1633176426.0386522/1252.out
+error =  condor1633176426.0386522/1252.err
+log = condor1633176426.0386522/1252.log
++MaxRuntime = 500000
+queue

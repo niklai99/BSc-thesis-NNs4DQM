@@ -1,0 +1,7 @@
+executable = condor_test_model_101633003328.982898/12.src
+universe = vanilla
+output = condor_test_model_101633003328.982898/12.out
+error =  condor_test_model_101633003328.982898/12.err
+log = condor_test_model_101633003328.982898/12.log
++MaxRuntime = 500000
+queue

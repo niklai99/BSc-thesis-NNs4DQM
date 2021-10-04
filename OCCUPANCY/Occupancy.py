@@ -2,22 +2,24 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+pd.options.mode.chained_assignment = None  # default='warn'
 
 
 class Occupancy:
     '''gestisce dell occupanza dei canali'''
     
     
-    def __init__(self, run_number: int, input_path: str, output_path: str, plot_path: str):
+    def __init__(self, run_number: int, input_path: str, file_tag: str, output_path: str, plot_path: str):
         '''numero identificativo della run, percorso del file di dati'''
         
         self.run_number = run_number
         self.input_path = input_path
+        self.file_tag = file_tag
         self.output_path = output_path
         self.plot_path = plot_path
         
         # genero il nome del file di input
-        self.input_file = self.input_path + f'RUN00{self.run_number}_data.txt'
+        self.input_file = self.input_path + f'RUN00{self.run_number}_{self.file_tag}.txt' # _data or _cut_shifted_hstat_condor
         
     
     def read_data(self):
@@ -47,25 +49,97 @@ class Occupancy:
         print('\nSeparating data rows from trigger rows...')
         self.data = self.stream[(self.stream['TDC_CHANNEL']!=128)]
         self.data.reset_index(inplace=True, drop=True)
-        
+    
         return self.data
+    
+    
+    
+    def select_trigger(self, n: int = -1):
+        '''prende solo il canale non fisico associato al trigger e ritorna le prime n righe'''
+        
+        self.trig = self.stream[(self.stream['TDC_CHANNEL']==128)].iloc[0:n]
+        self.trig.reset_index(inplace=True, drop=True)
+        
+        return self.trig
+        
+        
+        
+    def compute_dt_dataframe(self):
+        '''calcola il tempo di deriva, restituisce il dataframe completo ed il tempo di deriva è una nuova colonna'''
+        
+        def is_unique(s):
+            '''funzione usata per controllare che in un array ci sia solo un unico valore'''
+            a = s.to_numpy()
+            return (a[0] == a).all()
+        
+        # lista per contenere i tempi di deriva 
+        self.drift_df = pd.DataFrame()
+        
+        
+        print('\nComputing drift time...')
+        # per ogni segnale misurato dallo scintillatore
+        for i, trig_orb_cnt in enumerate(self.trig['ORBIT_CNT']):
+            # chiamo 'event' il dataframe contentente tutti i dati con stesso ORBIT_CNT dello scintillatore i-esimo
+            # escludendo i segnali dello scintillatore (TDC_CHANNEL 128)
+            event = self.data[(self.data['ORBIT_CNT']==trig_orb_cnt)]
+
+            # IMPORTANTE: controlla che l'evento non sia vuoto
+            # se l'evento è vuoto vuol dire che non c'è alcun segnale che abbia ORBIT_CNT uguale al trigger
+            if event.empty:
+                continue
+
+            # controllo che gli ORBIT_CNT nell'evento siano uguali e coincidano con quello dello scintillatore
+            if (is_unique(event['ORBIT_CNT'])) and (event['ORBIT_CNT'].iloc[0]==trig_orb_cnt):   
+                # calcolo la drift time come (tempo dati - tempo scintillatore i-esimo)
+                event['DRIFT_TIME'] = event['TIME'] - self.trig.loc[i, 'TIME']
+                # aggiungo alla lista le drift time dell'evento i-esimo 
+                self.drift_df = self.drift_df.append(event, ignore_index=True)
+
+        print('Drift time computed')
+    
+        return self.drift_df
+    
+    
+    def cut_dt(self, df, left_bound: float, right_bound: float):
+        '''elimina il rumore agli estremi della distribuzione'''
+        
+        # definisco due maschere per tagliare la distribuzione 
+        left_mask = df['DRIFT_TIME'] > left_bound
+        right_mask = df['DRIFT_TIME'] < right_bound
+        
+        # applico le maschere
+#         self.drift_time_cut = df[(left_mask & right_mask)]
+        df = df[(left_mask & right_mask)]
+        
+        return df # self.drift_time_cut
+    
+    
+    
+    def shift_dt(self, df, offset: float):
+        '''shifta la distribuzione di un offset costante dovuto alla calibrazione del detector'''
+        
+        # shift della distribuzione di un offset costante
+#         self.drift_time_shifted = df + offset
+        df['DRIFT_TIME'] = df['DRIFT_TIME'] + offset
+        
+        return df # self.drift_time_shifted
 
        
     
-    def compute_run_time(self):
+    def compute_run_time(self, df):
         '''calcola quanti secondi è durata la run'''
      
-        self.run_time = (self.data['TIME'].max() - self.data['TIME'].min()) * 1e-9
+        self.run_time = (df['TIME'].max() - df['TIME'].min()) * 1e-9
         
         return self.run_time
     
     
     
-    def split_fpga(self):
+    def split_fpga(self, df):
         '''divide i dati in base alla fpga che li ha acquisiti'''
     
-        self.data_fpga0 = self.data[(self.data['FPGA']==0)]
-        self.data_fpga1 = self.data[(self.data['FPGA']==1)]
+        self.data_fpga0 = df[(df['FPGA']==0)]
+        self.data_fpga1 = df[(df['FPGA']==1)]
         
         return self.data_fpga0, self.data_fpga1
     

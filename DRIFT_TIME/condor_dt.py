@@ -12,7 +12,7 @@ def argParser():
     parser = argparse.ArgumentParser() 
     parser.add_argument('-i','--input', type=str, default='/lustre/cmswork/nlai/DATA/raw_data/', help="input directory")
     parser.add_argument('-o','--output', type=str, default='/lustre/cmswork/nlai/DATA/drift_distributions/', help="output directory")
-    parser.add_argument('-n','--n_trigger', type=int, default=500, help="number of trigger signals")
+    parser.add_argument('-n','--n_trigger', type=int, default=-1, help="number of trigger signals")
     parser.add_argument('-p','--pyscript', type=str, default = "drift_time.py",  help="name of python script to execute")
     parser.add_argument('-left','--left_bound', type=float, default=-400, help="left bound for cutting distributions")
     parser.add_argument('-right','--right_bound', type=float, default=900, help="right bound for cutting distributions")
@@ -37,7 +37,8 @@ def main(args):
     L_BOUND = args.left_bound
     R_BOUND = args.right_bound
     
-    runs = get_runs(INPUT_PATH)
+#     runs = get_runs(INPUT_PATH)
+    runs = [1252]
     
     os.system(f'mkdir {OUTPUT_PATH}')
     

@@ -1,3 +1,0 @@
-#!/bin/bash
-eval "$(/lustre/cmswork/nlai/anaconda/bin/conda shell.bash hook)" 
-python /lustre/cmswork/nlai/DRIFT_TIME/drift_time.py -i /lustre/cmswork/nlai/DATA/raw_data/ -o /lustre/cmswork/nlai/DATA/drift_distributions/ -run 1252 -n -1 -left -400 -right 900

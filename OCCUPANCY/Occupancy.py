@@ -9,16 +9,17 @@ class Occupancy:
     '''gestisce dell occupanza dei canali'''
     
     
-    def __init__(self, run_number: int, input_path: str, output_path: str, plot_path: str):
+    def __init__(self, run_number: int, input_path: str, file_tag: str, output_path: str, plot_path: str):
         '''numero identificativo della run, percorso del file di dati'''
         
         self.run_number = run_number
         self.input_path = input_path
+        self.file_tag = file_tag
         self.output_path = output_path
         self.plot_path = plot_path
         
         # genero il nome del file di input
-        self.input_file = self.input_path + f'RUN00{self.run_number}_cut_shifted_hstat_condor.txt' # _data or _cut_shifted_hstat_condor
+        self.input_file = self.input_path + f'RUN00{self.run_number}_{self.file_tag}.txt' # _data or _cut_shifted_hstat_condor
         
     
     def read_data(self):

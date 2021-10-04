@@ -1,3 +1,0 @@
-#!/bin/bash
-eval "$(/lustre/cmswork/nlai/anaconda/bin/conda shell.bash hook)" 
-python /lustre/cmswork/nlai/NPL_1D/train.py -o test_model_11/47                                 -t 150 -sig 0 -bkg 10000 -ref 200000                                 -epochs 200000 -latsize 3 -layers 1                                 -wclip 7.0 -patience 1000

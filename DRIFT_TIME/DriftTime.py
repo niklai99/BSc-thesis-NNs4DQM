@@ -134,7 +134,7 @@ class DriftTime:
     
     
     
-    def select_ndata(self, ndata: int = -1)
+    def select_ndata(self, ndata: int = -1):
         '''selezione il numero di righe da analizzare'''
         
         self.data = self.stream[:ndata]

@@ -207,7 +207,7 @@ def main(args):
                 batch_norm_bool=True,              # mette un batch_normalization layer tra input e hidden layers
                 more_batch_norm_bool=False,         # mette un batch_normalization layer tra gli hidden
                 custom_activation_bool=True,       # usa una custom activation per l'output, altrimenti linear
-                custom_const=3.5                   # parametro della custom activation function 
+                custom_const=10.0                # parametro della custom activation function 
             )
     
     BSMfinder = NPLModel()

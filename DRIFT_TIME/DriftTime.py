@@ -163,13 +163,14 @@ class DriftTime:
                 # calcola la drift time 
                 event['DRIFT_TIME'] = event['TIME'] - event[event['IS_TRIG']==1].iloc[0]['TIME']
                 # rimpiazza lo 0 che viene fuori dal trigger con un NaN
-                event['DRIFT_TIME'].replace(0, np.nan, inplace=True)
+                event['DRIFT_TIME'].replace(0, 1e10, inplace=True)
             # SE nel gruppo non c'è il trigger value
-            elif 1 not in event['IS_TRIG'].values:
+            else:
                 # metti NaN come drift time
-                event['DRIFT_TIME'] = np.nan
-
-            self.drift_df = self.drift_df.append(event)
+                event['DRIFT_TIME'] = 1e10
+            
+            self.drift_df = pd.concat([self.drift_df, event], ignore_index=True)
+#             self.drift_df = self.drift_df.append(event, ignore_index=True)
             
         return self.drift_df
     
@@ -207,7 +208,7 @@ class DriftTime:
         self.ouput_file = self.output_path + f'RUN00{self.run_number}_{tag}.txt'
         
         print(f'Saving drift times to RUN00{self.run_number}_{tag}.txt ...')
-        df.to_csv(self.ouput_file, sep=' ', index=False, header=True)
+        df.to_csv(self.ouput_file, sep=' ', index=False, header=True, na_rep='NaN')
         print('Saving completed')
     
     

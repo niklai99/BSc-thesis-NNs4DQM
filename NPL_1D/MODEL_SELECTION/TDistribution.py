@@ -352,7 +352,7 @@ class TDist:
                 th_bins.append(area/(bin_width))
             # calcolo il chi2
             self.t_chi2_history.append( np.sum( (t_hist-th_bins)**2/th_bins, axis=0 ) ) 
-    
+            
         XMIN = 0
         XMAX = self.epochs
         

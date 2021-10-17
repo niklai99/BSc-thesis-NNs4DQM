@@ -46,11 +46,11 @@ def main(args):
     cut_dt = drift_instance.cut_dt(shifted_dt, L_BOUND, R_BOUND)
     
     
-#     drift_instance.save_dt(raw_dt, 'raw_hstat_condor')
-#     drift_instance.save_dt(cut_dt, 'cut_hstat_condor')
-    drift_instance.save_dt(shifted_dt, 'full_df_test')
+    drift_instance.save_dt(raw_dt, 'full_df_raw')
+    drift_instance.save_dt(shifted_dt, 'full_df_shifted')
+    drift_instance.save_dt(cut_dt, 'full_df_cut_shifted')
     
-    drift_instance.make_distribution_plot(cut_dt, L_BOUND, R_BOUND, 'full_df_test')
+#     drift_instance.make_distribution_plot(cut_dt['DRIFT_TIME'], L_BOUND, R_BOUND, 'full_df_test_cut_shifted2')
 #     drift_instance.make_distribution_plot(shifted_dt, L_BOUND, R_BOUND, 'cut_shifted_hstat_condor')
 #     drift_instance.make_comparison_plot(cut_dt, shifted_dt, L_BOUND, R_BOUND, 'comparison_hstat_condor')
     

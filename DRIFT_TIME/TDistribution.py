@@ -36,7 +36,7 @@ class TDist:
         rPar = RunParameters(self.OUT_PATH, 0, self.toys)
         toys, w_clip, epochs, check_point_t, ref, bkg, sig, latent, layers = rPar.fetch_parameters()
         
-        pngfile = f'E{epochs}_latent{latent}_layers{layers}_wclip{ww_clipclip}_ntoy{toys}_ref{ref}_bkg{bkg}_sig{sig}_patience{check_point_t}'
+        pngfile = f'E{epochs}_latent{latent}_layers{layers}_wclip{w_clip}_ntoy{toys}_ref{ref}_bkg{bkg}_sig{sig}_patience{check_point_t}'
         
         pngfile = pngfile.replace(' ', '')
         
@@ -346,19 +346,19 @@ class TDist:
             # binning della distribuzione dei t per ogni checkpoint
             t_hist, binedges = np.histogram(self.t_list_history[:, counter], bins=bin_number, density=False) 
             # cerco il centro di ciascun bin
-            bincenter = np.array([(binedges[i+1]+binedges[i])/2 for i in range(len(t_hist))])
+            bincenters = (binedges[:-1] + binedges[1:]) / 2
             # calcolo la larghezza dei bin
             bin_width = binedges[1]-binedges[0]
             # calcolo l'area dell'istogramma
             area_hist = bin_width*self.toys
-            # calcolo l'area della distribuzione teorica sotto l'istogramma
-#             area_dist = area_hist*scipy.integrate.quad(lambda x: scipy.stats.chi2.pdf(x, df=self.dof), binedges[0], binedges[-1])[0]
             # calcolo l'altezza teorica di ciascun bin
-#             th_bins = np.array([area_dist*scipy.stats.chi2.pdf(b_center, df=self.dof) for b_center in bincenter])   
-            th_bins = np.array([area_hist*scipy.stats.chi2.pdf(b_center, df=self.dof) for b_center in bincenter]) 
+            th_bins=[]
+            for i in range(len(bincenters)):
+                area = scipy.integrate.quad(lambda x: (area_hist*scipy.stats.chi2.pdf(x, df=self.dof)), binedges[i], binedges[i+1])[0]
+                th_bins.append(area/(bin_width))
             # calcolo il chi2
             self.t_chi2_history.append( np.sum( (t_hist-th_bins)**2/th_bins, axis=0 ) ) 
-    
+            
         XMIN = 0
         XMAX = self.epochs
         
@@ -366,10 +366,11 @@ class TDist:
 
         fig, ax = plt.subplots(figsize=(12,7))
 
-        x_tics = np.arange(0, self.epochs, self.check_point_t)
+        x_tics = np.array(range(self.epochs))
+        x_tics = x_tics[x_tics % self.check_point_t == 0][10:]
 
         
-        ax.plot(x_tics[10:], self.t_chi2_history[:], color='#009cff', linestyle='solid', linewidth=3, alpha=1, 
+        ax.plot(x_tics[:], self.t_chi2_history[:], color='#009cff', linestyle='solid', linewidth=3, alpha=1, 
                 label=fr'$\chi^2$ final value: {self.t_chi2_history[-1]:.3f}')
         
         self.plotterLayout(ax=ax, xlimits=XLIM, title=r'$\chi^2$ evolution', titlefont=18, xlabel='training epoch', ylabel=r'$\chi^2$', labelfont=16)
@@ -399,9 +400,10 @@ class TDist:
 
         fig, ax = plt.subplots(figsize=(12,7))
 
-        x_tics = np.arange(0, self.epochs, self.check_point_t)
+        x_tics = np.array(range(self.epochs))
+        x_tics = x_tics[x_tics % self.check_point_t == 0][10:]
         
-        ax.plot(x_tics[10:], self.t_chi2_compatibility[:], color='#009cff', linestyle='solid', linewidth=3, alpha=1, 
+        ax.plot(x_tics[:], self.t_chi2_compatibility[:], color='#009cff', linestyle='solid', linewidth=3, alpha=1, 
                 label=fr'$\chi^2 / \nu$ final value: {self.t_chi2_compatibility[-1]:.3f}'
                )
         
@@ -431,9 +433,10 @@ class TDist:
 
         fig, ax = plt.subplots(figsize=(12,7))
 
-        x_tics = np.arange(0, self.epochs, self.check_point_t)
+        x_tics = np.array(range(self.epochs))
+        x_tics = x_tics[x_tics % self.check_point_t == 0][10:]
         
-        ax.plot(x_tics[10:], self.t_chi2_compatibility[:], color='#009cff', linestyle='solid', linewidth=3, alpha=1, 
+        ax.plot(x_tics[:], self.t_chi2_compatibility[:], color='#009cff', linestyle='solid', linewidth=3, alpha=1, 
                 label=fr'$\lambda$ final value: {self.t_chi2_compatibility[-1]:.3f}'
                )
         

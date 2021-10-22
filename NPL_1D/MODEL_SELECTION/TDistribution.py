@@ -630,3 +630,64 @@ class TDist:
             fig.savefig(self.plotOutPath()+'_median_significance.png', dpi = 300, facecolor='white')
         plt.show()
         return
+    
+
+    def ks_test_evo(self):
+        
+        self.D_history = []
+        self.D_pval_history = []
+        for i in range(self.t_list_history.shape[1]):
+            self.D, self.Dpval = scipy.stats.kstest(
+                rvs=self.t_list_history[:,i],
+                cdf="chi2",
+                args=(10, 0, 1)
+            )
+            self.D_history.append(self.D)
+            self.D_pval_history.append(self.Dpval)
+        
+        self.D_history = np.array(self.D_history)
+        self.D_pval_history = np.array(self.D_pval_history)
+        
+        XMIN = 0
+        XMAX = self.epochs
+        YMIN = 0
+        YMAX = 1.2
+        
+        XLIM = [XMIN, XMAX]
+        
+        fig, ax = plt.subplots(figsize=(12,7))
+
+        x_tics = np.array(range(self.epochs))
+        x_tics = x_tics[x_tics % self.check_point_t == 0]
+        
+        ax.plot(x_tics[10:], self.D_history[10:], color='#009cff', linestyle='solid', linewidth=3, alpha=1, 
+                label=f'D statistic final value: {self.D:.3f}')
+        
+        self.plotterLayout(ax=ax, xlimits=XLIM, title='D statistic evolution', titlefont=18, xlabel='training epoch', ylabel='D', labelfont=16)
+        
+        ax.legend()
+        self.change_legend(ax=ax, new_loc="upper right", fontsize=14, titlesize=16)
+        
+        fig.tight_layout()
+        if self.save_flag:
+            fig.savefig(self.plotOutPath()+'_D_evolution.png', dpi = 300, facecolor='white')
+        plt.show()
+        
+        fig, ax = plt.subplots(figsize=(12,7))
+
+       
+        
+        ax.plot(x_tics[10:], self.D_pval_history[10:], color='#009cff', linestyle='solid', linewidth=3, alpha=1, 
+                label=f'KS final pvalue: {self.Dpval:.3f}')
+        
+        self.plotterLayout(ax=ax, xlimits=XLIM, title='KS p-value evolution', titlefont=18, xlabel='training epoch', ylabel='KS pval', labelfont=16)
+        
+        ax.legend()
+        self.change_legend(ax=ax, new_loc="upper right", fontsize=14, titlesize=16)
+        
+        fig.tight_layout()
+        if self.save_flag:
+            fig.savefig(self.plotOutPath()+'_KSp_evolution.png', dpi = 300, facecolor='white')
+        plt.show()
+        
+        return

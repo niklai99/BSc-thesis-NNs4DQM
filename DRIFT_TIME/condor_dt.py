@@ -38,7 +38,7 @@ def main(args):
     R_BOUND = args.right_bound
     
 #     runs = get_runs(INPUT_PATH)
-    runs = [1252]
+    runs = [1252, 1242, 1236, 1253, 1251]
     
     os.system(f'mkdir {OUTPUT_PATH}')
     

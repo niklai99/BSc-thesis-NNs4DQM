@@ -34,24 +34,24 @@ def main(args):
     
     drift_instance.read_data()
     drift_instance.compute_time()
-#     drift_instance.select_data()
-#     drift_instance.select_trigger(N_TRIGGER)
-#     raw_dt = drift_instance.compute_dt()
+    drift_instance.select_data()
+    drift_instance.select_trigger(N_TRIGGER)
+    raw_dt = drift_instance.compute_dt()
 #     raw_dt = drift_instance.compute_dt_dataframe()
 
-    drift_instance.select_ndata(N_TRIGGER)
-    drift_instance.add_trigger_flag()
-    raw_dt = drift_instance.compute_dt_full()
+#     drift_instance.select_ndata(N_TRIGGER)
+#     drift_instance.add_trigger_flag()
+#     raw_dt = drift_instance.compute_dt_full()
     shifted_dt = drift_instance.shift_dt(raw_dt, OFFSET_DETECTOR)
     cut_dt = drift_instance.cut_dt(shifted_dt, L_BOUND, R_BOUND)
     
     
-    drift_instance.save_dt(raw_dt, 'full_df_raw')
-    drift_instance.save_dt(shifted_dt, 'full_df_shifted')
-    drift_instance.save_dt(cut_dt, 'full_df_cut_shifted')
+    drift_instance.save_dt(raw_dt, 'raw_hstat_condor')
+    drift_instance.save_dt(shifted_dt, 'shifted_hstat_condor')
+    drift_instance.save_dt(cut_dt, 'cut_shifted_hstat_condor')
     
-#     drift_instance.make_distribution_plot(cut_dt['DRIFT_TIME'], L_BOUND, R_BOUND, 'full_df_test_cut_shifted2')
-#     drift_instance.make_distribution_plot(shifted_dt, L_BOUND, R_BOUND, 'cut_shifted_hstat_condor')
+#     drift_instance.make_distribution_plot(cut_dt, L_BOUND, R_BOUND, 'raw_hstat_condor')
+#     drift_instance.make_distribution_plot(shifted_dt, L_BOUND, R_BOUND, 'shifted_hstat_condor')
 #     drift_instance.make_comparison_plot(cut_dt, shifted_dt, L_BOUND, R_BOUND, 'comparison_hstat_condor')
     
     print('\n\nExiting...\n\n')

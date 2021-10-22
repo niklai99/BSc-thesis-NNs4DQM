@@ -197,9 +197,9 @@ def main(args):
                 weight_clipping=WEIGHT_CLIPPING,
                 internal_activation='tanh',        # usare tanh, sigmoid non va molto bene
                 batch_norm_bool=True,              # mette un batch_normalization layer tra input e hidden layers
-                more_batch_norm_bool=True,         # mette un batch_normalization layer tra gli hidden
+                more_batch_norm_bool=False,         # mette un batch_normalization layer tra gli hidden
                 custom_activation_bool=True,       # usa una custom activation per l'output, altrimenti linear
-                custom_const=1                    # parametro della custom activation function 
+                custom_const=2                    # parametro della custom activation function 
             )
     
     BSMfinder = NPLModel()

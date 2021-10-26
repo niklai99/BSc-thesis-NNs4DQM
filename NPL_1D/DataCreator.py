@@ -7,7 +7,7 @@ class DataCreator():
     '''genera le distribuzioni di dati'''
     
 
-    def make_distribution(self, n_background: int, n_signal: int):
+    def make_distribution(self, n_background: int, n_signal: int, loc: float = 0.8, scale: float = 0.02):
         '''crea la distribuzione e ritorna il dataframe associato'''
         
         # imposto il numero di dati da generare
@@ -16,7 +16,7 @@ class DataCreator():
         
         # genero le distribuzioni
         bkg_distribution = scipy.stats.expon.rvs(loc=0, scale=0.125, size=n_bkg)
-        sig_distribution = scipy.stats.norm.rvs(loc=0.8, scale=0.02, size=n_sig)
+        sig_distribution = scipy.stats.norm.rvs(loc=loc, scale=scale, size=n_sig)
         
         data_distribution = np.concatenate((np.array(bkg_distribution), np.array(sig_distribution)))
         np.random.shuffle(data_distribution)

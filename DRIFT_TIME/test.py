@@ -168,7 +168,7 @@ def main(args):
 #     REF_DF = build_data(n_background=N_Ref, n_signal=0)
 #     DATA_DF = build_data(n_background=N_Bkg_p, n_signal=N_Sig_p)
     REF_DF = read_data(file_name='RUN001252_cut_shifted_hstat_condor.txt', n_data=N_Ref)
-    DATA_DF = read_data(file_name='RUN001242_cut_shifted_hstat_condor.txt', n_data=N_Bkg_p)
+    DATA_DF = read_data(file_name='RUN001266_cut_shifted_hstat_condor.txt', n_data=N_Bkg_p)
 
     # create target and features
     target = make_target(N_Ref, N_Bkg_p, N_Sig_p)

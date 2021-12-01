@@ -33,3 +33,5 @@ DATA/
 DRIFT_TIME/thesis*/
 GAIA/
 NPL_1D/
+FALKON/__pycache__/
+PLOTS/NPL_1D/

@@ -56,11 +56,14 @@ def make_output_path(output_path: str, label: str):
     return output_path + label
 
     
-def read_data(file_name: str, n_data: int):
+def read_data(file_name: str, n_data: int, shift = None):
     '''legge la distribuzione da un file'''
     
     data_instance = DataReader()
     data_df = data_instance.build_sample(file_name, n_data)
+    
+    if shift:
+        data_df = data_df + shift
     
     return data_df
 
@@ -128,12 +131,10 @@ def main(args):
     # number of toy samples
     N_TOYS = args.toys
     
-    N_Sig = args.signal          # set this to 0 for training on reference
-    N_Bkg = args.background      # usually 10'000
-    N_Data = N_Bkg + N_Sig       # total number of data expected
-    N_Ref = args.reference       # usually 200'000
+    N_Data = args.background      # usually 10'000 -> 3000 for realistic DQM
+    N_Ref = args.reference       # usually 200'000 > 60000 for realistic DQM
     
-    EPOCHS = args.epochs         # number of epochs (a lot)
+    EPOCHS = args.epochs         # number of epochs 
     LATENT_SIZE = args.latsize   # number of nodes in each hidden layer (what is this?)
     LAYERS = args.layers         # number of hidden layers
     
@@ -168,7 +169,7 @@ def main(args):
 #     REF_DF = build_data(n_background=N_Ref, n_signal=0)
 #     DATA_DF = build_data(n_background=N_Bkg_p, n_signal=N_Sig_p)
     REF_DF = read_data(file_name='RUN001252_cut_shifted_hstat_condor.txt', n_data=N_Ref)
-    DATA_DF = read_data(file_name='RUN001266_cut_shifted_hstat_condor.txt', n_data=N_Bkg_p)
+    DATA_DF = read_data(file_name='RUN001266_cut_shifted_hstat_condor.txt', n_data=N_Bkg_p, shift=90)
 
     # create target and features
     target = make_target(N_Ref, N_Bkg_p, N_Sig_p)

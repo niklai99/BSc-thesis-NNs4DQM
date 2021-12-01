@@ -167,8 +167,8 @@ def main(args):
     # build reference and data dataframes
 #     REF_DF = build_data(n_background=N_Ref, n_signal=0)
 #     DATA_DF = build_data(n_background=N_Bkg_p, n_signal=N_Sig_p)
-    REF_DF = read_data(file_name='RUN001252_cut_shifted_hstat_condor.txt', n_data=N_Ref)
-    DATA_DF = read_data(file_name='RUN001252_cut_shifted_hstat_condor.txt', n_data=N_Bkg_p)
+    REF_DF = read_data(file_name='RUN1252.txt', n_data=N_Ref)
+    DATA_DF = read_data(file_name='RUN1252.txt', n_data=N_Bkg_p)
 
     # create target and features
     target = make_target(N_Ref, N_Bkg_p, N_Sig_p)
@@ -197,9 +197,9 @@ def main(args):
                 weight_clipping=WEIGHT_CLIPPING,
                 internal_activation='tanh',        # usare tanh, sigmoid non va molto bene
                 batch_norm_bool=True,              # mette un batch_normalization layer tra input e hidden layers
-                more_batch_norm_bool=False,         # mette un batch_normalization layer tra gli hidden
+                more_batch_norm_bool=True,         # mette un batch_normalization layer tra gli hidden
                 custom_activation_bool=True,       # usa una custom activation per l'output, altrimenti linear
-                custom_const=2                    # parametro della custom activation function 
+                custom_const=1                     # parametro della custom activation function 
             )
     
     BSMfinder = NPLModel()

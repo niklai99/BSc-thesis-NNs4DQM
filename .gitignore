@@ -5,7 +5,6 @@ lkl_fit/
 data_analysis.ipynb
 ideal_significance1D.ipynb
 .bash_profile
-DATA/
 NPL_CODE/
 DRIFT_TIME/.ipynb_checkpoints/
 DRIFT_TIME/__pycache__
@@ -30,3 +29,7 @@ README.md
 DRIFT_TIME/model_*/
 FETCH_DATA/condor*/
 SLIDES_CMS/
+DATA/
+DRIFT_TIME/thesis*/
+GAIA/
+NPL_1D/

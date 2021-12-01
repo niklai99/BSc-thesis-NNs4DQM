@@ -5,6 +5,7 @@ import pandas as pd
 import scipy.stats
 import matplotlib.pyplot as plt
 import seaborn as sns
+from matplotlib.ticker import ScalarFormatter
 
 from RunParameters import RunParameters
 
@@ -12,12 +13,14 @@ from RunParameters import RunParameters
 class TDist:
     '''classe che gestisce la distribuzione dei t'''
     
-    def __init__(self, dof, bins, toys, epochs, check_point_t, w_clip, out_dir, tfile, thistory, save_flag):
+    def __init__(self, dof, bins, toys, epochs, nref, nbkg, check_point_t, w_clip, out_dir, tfile, thistory, save_flag):
         '''init: imposto parametri importanti della run e i file di interesse'''
         
         self.dof = dof
         self.bins = bins
         self.epochs = epochs
+        self.nref = nref
+        self.nbkg = nbkg
         self.check_point_t = check_point_t
         self.toys = toys
         self.wclip = w_clip
@@ -62,7 +65,7 @@ class TDist:
             file_name = (
                 self.OUT_PATH + 
                 f'/{i}/' + 
-                f'E{self.epochs}_latent3_layers1_wclip{self.wclip}_ntoy{self.toys}_ref200000_bkg10000_sig0_patience1000' + 
+                f'E{self.epochs}_latent3_layers1_wclip{self.wclip}_ntoy{self.toys}_ref{self.nref}_bkg{self.nbkg}_sig0_patience1000' + 
                 self.OUT_FILE_t
             )
             
@@ -83,7 +86,7 @@ class TDist:
             history_name = (
                 self.OUT_PATH + 
                 f'/{i}/' + 
-                f'E{self.epochs}_latent3_layers1_wclip{self.wclip}_ntoy{self.toys}_ref200000_bkg10000_sig0_patience1000' + 
+                f'E{self.epochs}_latent3_layers1_wclip{self.wclip}_ntoy{self.toys}_ref{self.nref}_bkg{self.nbkg}_sig0_patience1000' + 
                 self.OUT_FILE_t_history
             )
             
@@ -104,11 +107,11 @@ class TDist:
         self.t_list_history=np.array(self.t_list_history)
         
         # rimuovo nan values
-        self.t_list = self.t_list[~np.isnan(self.t_list)]
-        self.t_list_history = self.t_list_history[~np.isnan(self.t_list_history).any(axis=1), :]
+#         self.t_list = self.t_list[~np.isnan(self.t_list)]
+#         self.t_list_history = self.t_list_history[~np.isnan(self.t_list_history).any(axis=1), :]
         
-        self.t_list = self.t_list[self.t_list<40]
-        self.t_list_history = self.t_list_history[self.t_list_history[:, -1]<40]
+#         self.t_list = self.t_list[self.t_list<40]
+#         self.t_list_history = self.t_list_history[self.t_list_history[:, -1]<40]
         
         print(f"\nToys at disposal/Total toys: {counter}/{self.toys-preview}")
         
@@ -166,76 +169,259 @@ class TDist:
         ax.set_ylabel(ylabel, fontsize = labelfont)
         
         # sistemo i ticks
-        ax.tick_params(axis = 'both', which = 'major', labelsize = 14, direction = 'out', length = 5)
+        ax.tick_params(axis = 'both', which = 'major', labelsize = 24, direction = 'out', length = 5)
         
         return
     
     
-    def plotTdist(self):
-        '''grafico della distribuzione dei t'''
+    
+    
+###########################################################################    
+    def thesisPlot(self):
+        fig, ax = plt.subplots(nrows=2, figsize=(14,16))
         
-        # gestione del plot range
+         # gestione del plot range
         XMIN = 0
         if max(self.t_list) >= 3*self.dof:
             XMAX = max(self.t_list) + min(self.t_list) 
         elif max(self.t_list) < 3*self.dof:
             XMAX = 3*self.dof
             
-        XLIM = [XMIN, XMAX]
-        
         # creo la griglia lungo x
         XGRID = np.linspace(XMIN, XMAX, 500)
         
         # numero di bin da utilizzare
         BINS = self.bins
         
-        # fit della distribuzione con un chi2
-        fit_par = scipy.stats.chi2.fit(self.t_list, floc=0, fscale=1)
         
-        # creo figure&axes
-        fig, ax = plt.subplots(figsize=(12,7))
-        
-        # istogramma della distrubuzione dei t
-        ax = sns.histplot(x=self.t_list, bins=BINS, 
-                          stat='density', element='bars', fill=True, color='#aadeff', edgecolor='#009cff', 
-                          label='t distribution')
-        
-        # parte di codice per aggiungere l'incertezza ai bin 
         hist, bin_edges = np.histogram(self.t_list, density=True, bins=BINS)
+
         binswidth = bin_edges[1]-bin_edges[0]
-        central_points = []
-        for i in range(0, len(bin_edges)-1):
-            half = (bin_edges[i] + bin_edges[i+1])/2
-            central_points.append(half)
-        # calcolo dell'incertezza dei bin
+        central_points = [
+            (bin_edges[i] + bin_edges[i + 1]) / 2 for i in range(len(bin_edges) - 1)
+        ]
         err = np.sqrt(hist/(self.t_list.shape[0]*binswidth))
-        # grafico delle incertezze sui bin 
-        ax.errorbar(central_points, hist, yerr = err, color='#009cff', marker='o', ls='')
+
+        ax[0].plot(
+            XGRID, scipy.stats.chi2.pdf(XGRID, df=self.dof), 
+            color='#005e99', linestyle='solid', linewidth=7, alpha=0.6, 
+            label=r'Target $\chi^{2}_{10}$'
+        )
+
+        sns.histplot(
+            x=bin_edges[:-1], weights=hist, bins=bin_edges,
+            stat='density', element='bars', linewidth=2,
+            fill=True, color='#aadeff', edgecolor='#009cff', 
+            ax=ax[0]
+        )
+
+        ax[0].errorbar(central_points, hist, yerr=err, color='#009cff', linewidth=2, marker='o', ls='')
+
+#         ax[0].set_title(f'Test statistic distribution', fontsize = 32)
+        ax[0].set_xlabel('t', fontsize = 56)
+        ax[0].set_ylabel(r'p(t | $\mathcal{R}$)', fontsize = 56)
+
+        ax[0].set_xlim(XMIN, XMAX)
+        ax[0].set_ylim(0, 0.11)
+
+        ax[0].tick_params(axis = 'both', which = 'major', labelsize = 48, direction = 'out', length = 5)
+#         ax[0].yaxis.get_offset_text().set_fontsize(48)
+#         ax[0].yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+#         ax[0].ticklabel_format(axis = 'y', style = 'sci', scilimits = (0,0))
+
+        ax[0].legend()
+        self.change_legend(ax=ax[0], new_loc="upper right", fontsize=44, titlesize=0)
         
-        # grafico della distribuzione teorica del chi2
-        ax.plot(XGRID,scipy.stats.chi2.pdf(XGRID, df=self.dof), 
-                color='#00FF00', linestyle='solid', linewidth=5, alpha=0.6, 
-                label=f'theoretical distribution, dof: {self.dof}')
+        XMIN = 0
+        XMAX = self.epochs
         
-        # grafico del fit della distribuzione 
-        ax.plot(XGRID, scipy.stats.chi2.pdf(XGRID, *fit_par), 
-                color='#FF0000', linestyle='solid', linewidth=5, alpha=0.6, 
-                label=f'fitted chi2, dof: '+format(fit_par[0],'1.4f'))
+        YMIN = 0
+        YMAX = 24
+            
+            
+        XLIM = [XMIN, XMAX]
+        YLIM = [YMIN, YMAX]
         
+        # ticks
+        x_tics = np.arange(0, self.epochs, self.check_point_t)
+#         print(x_tics)
         
-        self.plotterLayout(ax=ax, xlimits=XLIM, title='t distribution', titlefont=18, xlabel='t', ylabel='density', labelfont=16)
+        # quantili
+        quantile_list = [0.05,0.25,0.50,0.75,0.95]
+        quantile_labels = ["5%", "25%", "50%", "75%", "95%"]
+        color_list = ['#00b32a', '#00c282', '#00D2FF', '#009cff', '#005e99']
+#         color_list = list(reversed(color_list))
         
-        # gestione della legenda
-        ax.legend()
-        handles, labels = ax.get_legend_handles_labels()
-        ax.legend([handles[idx] for idx in [2, 0, 1]], [labels[idx] for idx in [2, 0, 1]])
-        self.change_legend(ax=ax, new_loc="upper right", fontsize=14, titlesize=16)
+        # quantili teorici
+        th_quantile_position = [scipy.stats.chi2.ppf(i, df=self.dof) for i in quantile_list]
         
+        # quantili distribuzione
+        t_quantile = np.quantile(self.t_list_history[:], quantile_list, axis=0)
+        
+        # ciclo per plottare i 5 quantili 
+        for i in range(len(quantile_list)):
+            ax[1].plot(x_tics[:], t_quantile[i][:], 
+                    color = color_list[i], linestyle='solid', linewidth = 3, 
+                    label = format(quantile_list[i], '1.2f'))
+#             ax.plot(x_tics[-1], th_quantile_position[i], marker='X', markersize = 15,
+#                     color = color_list[i])
+            ax[1].hlines(y=th_quantile_position[i], xmin = XMIN, xmax = XMAX, 
+                      color = color_list[i], linestyle='dashed', linewidth = 3, alpha = 0.5, 
+                    label = 'theoretical ' + format(quantile_list[i], '1.2f'))
+            ax[1].text(
+                210000, th_quantile_position[i], 
+                quantile_labels[i], 
+                horizontalalignment='left', verticalalignment='center', 
+                color=color_list[i],
+                fontsize=44,
+                transform=ax[1].transData)
+        
+        # plot layout method
+        self.plotterLayout(ax=ax[1], xlimits=XLIM, ylimits=YLIM, title='', titlefont=32, xlabel='training epochs', ylabel='t', labelfont=56)
+        start, end = ax[1].get_xlim()
+        ax[1].xaxis.set_ticks(np.arange(start, 300000, 50000))
+        plt.setp(ax[1].get_xticklabels()[-1], visible=False)
+        plt.setp(ax[1].get_xticklabels()[-2], visible=False)
+        plt.setp(ax[1].get_xticklabels()[-4], visible=False)
+        plt.setp(ax[1].get_xticklabels()[-3], visible=False)
+        ax[1].tick_params(axis = 'both', which = 'major', labelsize = 48, direction = 'out', length = 5)
+        
+#         ax[1].set_title("Quantiles evolution", fontsize=32)
+        ax[1].set_xlabel('training epochs', fontsize = 56)
+        ax[1].set_ylabel('t', fontsize = 56)
         fig.tight_layout()
         if self.save_flag:
-            fig.savefig(self.plotOutPath()+'_distribution.png', dpi = 300, facecolor='white')
+            fig.savefig(f"/lustre/cmswork/nlai/PLOTS/DRIFT_TIME/thesis/both_{self.wclip}.pdf", dpi = 300, facecolor='white')
         plt.show()
+        return
+###########################################################################    
+    
+    def plotTdist(self):
+        '''grafico della distribuzione dei t'''
+        
+        fig, ax = plt.subplots(figsize=(14,8))
+        
+         # gestione del plot range
+        XMIN = 0
+        if max(self.t_list) >= 3*self.dof:
+            XMAX = max(self.t_list) + min(self.t_list) 
+        elif max(self.t_list) < 3*self.dof:
+            XMAX = 3*self.dof
+            
+        # creo la griglia lungo x
+        XGRID = np.linspace(XMIN, XMAX, 500)
+        
+        # numero di bin da utilizzare
+        BINS = self.bins
+        
+        
+        hist, bin_edges = np.histogram(self.t_list, density=True, bins=BINS)
+
+        binswidth = bin_edges[1]-bin_edges[0]
+        central_points = [
+            (bin_edges[i] + bin_edges[i + 1]) / 2 for i in range(len(bin_edges) - 1)
+        ]
+        err = np.sqrt(hist/(self.t_list.shape[0]*binswidth))
+
+        ax.plot(
+            XGRID, scipy.stats.chi2.pdf(XGRID, df=self.dof), 
+            color='#005e99', linestyle='solid', linewidth=7, alpha=0.6, 
+            label=r'Target $\chi^{2}_{10}$'
+        )
+
+        sns.histplot(
+            x=bin_edges[:-1], weights=hist, bins=bin_edges,
+            stat='density', element='bars', linewidth=2,
+            fill=True, color='#aadeff', edgecolor='#009cff', 
+            ax=ax
+        )
+
+        ax.errorbar(central_points, hist, yerr=err, color='#009cff', linewidth=2, marker='o', ls='')
+
+        ax.set_title(f'Test statistic distribution', fontsize = 32)
+        ax.set_xlabel('t', fontsize = 28)
+        ax.set_ylabel(r'p(t | $\mathcal{R}$)', fontsize = 28)
+
+        ax.set_xlim(XMIN, XMAX)
+#         ax.set_ylim(0, 0.11)
+
+        ax.tick_params(axis = 'both', which = 'major', labelsize = 24, direction = 'out', length = 5)
+        ax.yaxis.get_offset_text().set_fontsize(24)
+        ax.yaxis.set_major_formatter(ScalarFormatter(useMathText=True))
+        ax.ticklabel_format(axis = 'y', style = 'sci', scilimits = (0,0))
+
+        ax.legend()
+        self.change_legend(ax=ax, new_loc="upper right", fontsize=22, titlesize=0)
+        if self.save_flag:
+            fig.savefig(f"/lustre/cmswork/nlai/PLOTS/DRIFT_TIME/thesis/distribution_{self.wclip}.pdf", dpi = 300, facecolor='white')
+        
+        plt.show()
+        
+#         # gestione del plot range
+#         XMIN = 0
+#         if max(self.t_list) >= 3*self.dof:
+#             XMAX = max(self.t_list) + min(self.t_list) 
+#         elif max(self.t_list) < 3*self.dof:
+#             XMAX = 3*self.dof
+            
+#         XLIM = [XMIN, XMAX]
+        
+#         # creo la griglia lungo x
+#         XGRID = np.linspace(XMIN, XMAX, 500)
+        
+#         # numero di bin da utilizzare
+#         BINS = self.bins
+        
+#         # fit della distribuzione con un chi2
+#         fit_par = scipy.stats.chi2.fit(self.t_list, floc=0, fscale=1)
+        
+#         # creo figure&axes
+#         fig, ax = plt.subplots(figsize=(14,8))
+        
+#         # istogramma della distrubuzione dei t
+#         ax = sns.histplot(x=self.t_list, bins=BINS, 
+#                           stat='density', element='bars', fill=True, color='#aadeff', edgecolor='#009cff', 
+#                           label='t distribution')
+        
+#         # parte di codice per aggiungere l'incertezza ai bin 
+#         hist, bin_edges = np.histogram(self.t_list, density=True, bins=BINS)
+#         binswidth = bin_edges[1]-bin_edges[0]
+#         central_points = []
+#         for i in range(0, len(bin_edges)-1):
+#             half = (bin_edges[i] + bin_edges[i+1])/2
+#             central_points.append(half)
+#         # calcolo dell'incertezza dei bin
+#         err = np.sqrt(hist/(self.t_list.shape[0]*binswidth))
+#         # grafico delle incertezze sui bin 
+#         ax.errorbar(central_points, hist, yerr = err, color='#009cff', marker='o', ls='')
+        
+#         # grafico della distribuzione teorica del chi2
+#         ax.plot(XGRID,scipy.stats.chi2.pdf(XGRID, df=self.dof), 
+#                 color='#00FF00', linestyle='solid', linewidth=5, alpha=0.6, 
+#                 label=f'theoretical distribution, dof: {self.dof}')
+        
+#         # grafico del fit della distribuzione 
+#         ax.plot(XGRID, scipy.stats.chi2.pdf(XGRID, *fit_par), 
+#                 color='#FF0000', linestyle='solid', linewidth=5, alpha=0.6, 
+#                 label=f'fitted chi2, dof: '+format(fit_par[0],'1.4f'))
+        
+        
+#         self.plotterLayout(ax=ax, xlimits=XLIM, title='t distribution', titlefont=18, xlabel='t', ylabel='density', labelfont=16)
+        
+#         # gestione della legenda
+#         ax.legend()
+#         handles, labels = ax.get_legend_handles_labels()
+#         ax.legend([handles[idx] for idx in [2, 0, 1]], [labels[idx] for idx in [2, 0, 1]])
+#         self.change_legend(ax=ax, new_loc="upper right", fontsize=14, titlesize=16)
+        
+#         fig.tight_layout()
+#         if self.save_flag:
+#             fig.savefig(self.plotOutPath()+'_distribution.png', dpi = 300, facecolor='white')
+#         plt.show()
         return 
+
+
+    
     
     
     def plotThistory(self):
@@ -284,17 +470,14 @@ class TDist:
         XMAX = self.epochs
         
         YMIN = 0
-        if max(self.t_list) >= 3*self.dof:
-            YMAX = max(self.t_list) + min(self.t_list) 
-        elif max(self.t_list) < 3*self.dof:
-            YMAX = 3*self.dof
+        YMAX = 24
             
             
         XLIM = [XMIN, XMAX]
         YLIM = [YMIN, YMAX]
         
         # creo figura e axes
-        fig, ax = plt.subplots(figsize=(12,7))
+        fig, ax = plt.subplots(figsize=(14,8))
         
         # ticks
         x_tics = np.arange(0, self.epochs, self.check_point_t)
@@ -302,7 +485,9 @@ class TDist:
         
         # quantili
         quantile_list = [0.05,0.25,0.50,0.75,0.95]
-        color_list = ['#ff0000', '#00ff00', '#0080ff', '#ff8000', '#ff00ff']
+        quantile_labels = ["5%", "25%", "50%", "75%", "95%"]
+        color_list = ['#00b32a', '#00c282', '#00D2FF', '#009cff', '#005e99']
+#         color_list = list(reversed(color_list))
         
         # quantili teorici
         th_quantile_position = [scipy.stats.chi2.ppf(i, df=self.dof) for i in quantile_list]
@@ -315,23 +500,40 @@ class TDist:
             ax.plot(x_tics[:], t_quantile[i][:], 
                     color = color_list[i], linestyle='solid', linewidth = 3, 
                     label = format(quantile_list[i], '1.2f'))
-            ax.plot(x_tics[-1], th_quantile_position[i], marker='X', markersize = 15,
-                    color = color_list[i])
+#             ax.plot(x_tics[-1], th_quantile_position[i], marker='X', markersize = 15,
+#                     color = color_list[i])
             ax.hlines(y=th_quantile_position[i], xmin = XMIN, xmax = XMAX, 
                       color = color_list[i], linestyle='dashed', linewidth = 3, alpha = 0.5, 
                     label = 'theoretical ' + format(quantile_list[i], '1.2f'))
+            ax.text(
+                210000, th_quantile_position[i], 
+                quantile_labels[i], 
+                horizontalalignment='left', verticalalignment='center', 
+                color=color_list[i],
+                fontsize=22,
+                transform=ax.transData)
         
         # plot layout method
-        self.plotterLayout(ax=ax, xlimits=XLIM, ylimits=YLIM, title='t quantiles evolution', titlefont=18, xlabel='training epoch', ylabel='t', labelfont=16)
+        self.plotterLayout(ax=ax, xlimits=XLIM, ylimits=YLIM, title='Quantiles evolution', titlefont=32, xlabel='training epochs', ylabel='t', labelfont=28)
+        start, end = ax.get_xlim()
+        ax.xaxis.set_ticks(np.arange(start, 300000, 50000))
+        plt.setp(ax.get_xticklabels()[-1], visible=False)
+        
+        ax.set_title("Quantiles evolution", fontsize=32)
+        ax.set_xlabel('training epochs', fontsize = 28)
+        ax.set_ylabel('t', fontsize = 28)
         
         # plot legend
-        ax.legend(title = 'Quantiles', ncol = 2)
-        self.change_legend(ax=ax, new_loc="upper right", fontsize=14, titlesize=16)
-        ax.legend(title = 'Quantiles', ncol = 2)
+#         ax.legend(ncol = 2)
+#         self.change_legend(ax=ax, new_loc="upper right", fontsize=22, titlesize=0)
+#         ax.legend(title = 'Quantiles', ncol = 2)
         
+#         fig.tight_layout()
+#         if self.save_flag:
+#             fig.savefig(self.plotOutPath()+'_quantiles.png', dpi = 300, facecolor='white')
         fig.tight_layout()
         if self.save_flag:
-            fig.savefig(self.plotOutPath()+'_quantiles.png', dpi = 300, facecolor='white')
+            fig.savefig(f"/lustre/cmswork/nlai/PLOTS/DRIFT_TIME/thesis/quantiles_{self.wclip}.pdf", dpi = 300, facecolor='white')
         plt.show()
         return
     

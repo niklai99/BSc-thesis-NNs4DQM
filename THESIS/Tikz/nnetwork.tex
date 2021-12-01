@@ -1,0 +1,51 @@
+% Fully Connected Neural Network
+\begin{tikzpicture}[shorten >=1pt,->,draw=black!50, node distance=\layersep, scale=0.5]
+    \tikzstyle{every pin edge}=[<-,shorten <=1pt]
+    \tikzstyle{neuron}=[circle,fill=black!25,minimum size=15pt,inner sep=0pt]
+    \tikzstyle{input neuron}=[neuron, fill=green!40];
+    \tikzstyle{output neuron}=[neuron, fill=red!40];
+    \tikzstyle{hidden neuron}=[neuron, fill=blue!40];
+    \tikzstyle{annot} = [text width=4em, text centered]
+
+    % Draw the input layer nodes
+    \foreach \name / \y in {1,...,4}
+    % This is the same as writing \foreach \name / \y in {1/1,2/2,3/3,4/4}
+        \node[input neuron, draw=black!100, thick, pin=left:{\scriptsize input{ }\#\y}] (I-\name) at (-\layersep,-1.5-1.4*\y) {};
+
+    % Draw the hidden layer nodes
+    \foreach \name / \y in {1,...,8}
+        \path[yshift=0.5cm]
+            node[hidden neuron,draw=black!100,thick] (H-\name) at (2*\layersep,-1.2*\y cm) {};
+    
+    \foreach \name / \y in {1,...,8}
+        \path[yshift=0.5cm]
+            node[hidden neuron,draw=black!100,thick] (H2-\name) at (4*\layersep,-1.2*\y cm) {};
+
+    % Draw the output layer node
+    \node[output neuron,draw=black!100,thick,pin={[pin edge={->}]right:{\scriptsize output{ }\#1}}] (O1) [above right=-0.3cm
+    and 1.25*\layersep of H2-4] {};
+    \node[output neuron,draw=black!100,thick,pin={[pin edge={->}]right:{\scriptsize output{ }\#2}}] (O2) [below right=-0.3cm
+    and 1.25*\layersep of H2-5] {};
+
+    % Connect every node in the input layer with every node in the
+    % hidden layer.
+    \foreach \source in {1,...,4}
+        \foreach \dest in {1,...,8}
+            \path (I-\source) edge (H-\dest);
+
+    \foreach \source in {1,...,8}
+        \foreach \dest in {1,...,8}
+            \path (H-\source) edge (H2-\dest);
+
+    % Connect every node in the hidden layer with the output layer
+    \foreach \source in {1,...,8}
+        \path (H2-\source) edge (O1);
+    \foreach \source in {1,...,8}
+        \path (H2-\source) edge (O2);
+
+    % Annotate the layers
+    \node[label={Hidden Layers}, above=0.4cm] (h_l) at ($(H-1)!0.5!(H2-1)$) {};
+    \node[label={Input Layer}] (i_l) [left=0cm and 1.9*\layersep of h_l] {};
+    \node[label={Output Layer}] (o_l) [right=0cm and 1.9*\layersep of h_l] {};
+
+\end{tikzpicture}

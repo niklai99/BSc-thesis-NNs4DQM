@@ -1,0 +1,36 @@
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction} \markboth{INTRODUCTION}{}
+\label{chap:Introduction}
+
+The realm of this thesis work is data quality monitoring (DQM for short), which deals with being able to tell whether
+data in a given dataset have been appropriately collected so that we can extrapolate relevant results from them, or acquired
+poorly, and in the latter case, datasets may also be useless in their entirety. As experiments grow more extensive, and a larger
+amount of data is being collected, the already crucial role of DQM turns out to be essential in modern physics
+experiments. 
+
+Data quality monitoring tasks have always been performed since the very first experiments: the scientist tests the
+experimental setup on a well-known configuration, then visually compares the collected data with his expectations and,
+if it looks like to him that the setup is working correctly, the scientist begins with his experiment. Of course,
+through time, DQM procedures have evolved consistently to keep up with the ever-increasing complexity of the experiments
+and the data being acquired. However, it is pretty common to encounter many human performed tasks, from visually
+comparing data to running advanced statistical tests. As datasets get more extensive and more complex, it could become a
+highly demanding and time-consuming job.  
+
+Our main goal is thus to minimize the human efforts in data quality monitoring tasks, and we intend to exploit
+machine learning techniques. Machine learning is the science of getting computers to perform operations without being
+explicitly programmed. It is a branch of artificial intelligence that aims to imitate the way humans learn, gradually
+improving its accuracy. It has become a most pervasive topic, finding applications in every branch of science and playing a substantial role in modern experimental physics. \\
+
+In this thesis work, we have exploited a deep learning algorithm based on the maximum likelihood principle: it compares
+the collected data with a given reference dataset and returns the level of agreement between the two in the form of a
+test statistic. It has been tested on data quality monitoring tasks using datasets coming from the realm of particle
+physics. Precisely, we have been working on a cosmic muon telescope, a drift tubes detector, located at the Legnaro INFN
+National Laboratories and reproducing a small-scale replica of the CMS's muon chambers. The experimental setup and the
+employed datasets are introduced and described in \autoref{chap:Experiment}. In \autoref{chap:Algorithm} we offer a
+brief explanation of the algorithm, providing a brief yet crucial conceptual background and a general overview of its
+functioning. Lastly, the DQM performance of the algorithm is reported in \autoref{chap:Results}, along with its
+technical implementation and prospects. 
+
+
+
+

@@ -1,0 +1,147 @@
+\chapter{Introduction to Neural Networks}
+\label{chap:MachineLearning}
+
+The main purpose of this chapter is to introduce the framework in which this work has been developed: machine learning.
+The main concept behind machine learning is the automated detection of meaningful patterns in data and its usage is
+often related to the high complexity of such patterns that a human programmer could not explicitly specify how the actual
+detection should be executed. As we humans acquire or refine skills by learning from the experiences we have, machine
+learning tools are concerned with providing programs with the ability to learn from data and adapt according to it. 
+
+To be more precise, the actual context behind this work is that of Deep Learning, a sub-class of machine learning
+methods based on Artificial Neural Networks (which we will call simply Neural Networks or NNs). The adjective "deep"
+refers to the usage of multiple layers and each layer learns to transform its input data into a slightly more abstract
+representation. 
+
+\section{Artificial Neural Networks}
+\label{sec:nn}
+
+An Artificial Neural Network is a computational model, heavily inspired by the structure of the human brain. In
+simplified models of the brain, a neural network is made from a large number of basic computing devices, called neurons,
+connected in a complex communication network, through which the brain is capable of complex computations.
+Artificial Neural Networks are formal computation constructs, modeled after this computation paradigm, consisting in a
+set of connected nodes (the neurons) and each connection, like biological synapses, can transmit information from one
+node to the other.
+
+The simplest model of an artificial neuron is the so-called "perceptron": it takes a set of binary inputs $(x_{1},\,
+\ldots,\, x_{n})$ and returns a single binary output. Moreover, an appropriate weight $w_i\in\mathbb{R}$ is assigned to
+each input $x_i$, allowing the perceptron to set a different significance depending on the input information. Finally,
+the output of the neuron is determined whether the weighted sum of the inputs is greater than a threshold or not. A
+visual representation of the perceptron is shown in \autoref{fig:perceptron}.
+
+\begin{figure}[H]
+	\centering
+	\input{Tikz/perceptron.tex}
+	\captionof{figure}{Visual representation of the perceptron}
+	\label{fig:perceptron}
+\end{figure}  
+
+It is now straightforward to assemble a neural network by combining neurons following some particular structure. The
+most common architecture model arranges the neurons in consecutive layers: the nodes in the first layer (input layer)
+are the only neurons that actually see the input data, while the following layers (hidden layers) see the output of
+the previous layer. The last layer, called output layer, is instead responsible for returning the output accordingly to
+the neuron model, for example, the weighted sum if neurons are described as perceptrons. Each layer can be fully
+connected with the following one, meaning that each neuron of the former layer is connected with every neuron of the
+latter. In this scenario, we call the network as fully connected NN. However, it is not necessary to have all those
+connections between layers: neurons could be partially connected as well. In \autoref{fig:nnetwork} we show a network
+with 4 neurons in the input layer, 2 in the output layer and two hidden layers in between, made of 8 neurons each. 
+
+\begin{figure}[H]
+	\centering
+	\input{Tikz/nnetwork.tex}
+	\captionof{figure}{Visual representation of a fully connected neural network}
+	\label{fig:nnetwork}
+\end{figure}  
+
+More generally, NNs can be described mathematically by associating to each layer an appropriate function: denominating
+the input data as $\vec{x}$ and the output of the network as $f_{\text{NN}}$ we could write 
+
+\begin{equation}
+    f_{\text{NN}}(\vec{x})= f \circ g \circ h \circ \ldots \circ \vec{x}
+\end{equation}
+
+\noindent in which each function can be a linear transformation, that depends on free parameters, or a non-linear
+transformation not depending on free parameters. We will consider linear transformations: in this case, functions
+associated with layers can be written as 
+
+\begin{equation}
+    h(\vec{y})=\hat{\mathbf{w}}\,\vec{y} + \vec{b}
+\end{equation}
+
+\noindent where $\hat{\mathbf{w}}$ is the weights matrix and $\vec{b}$ is the bias vector. The elements of
+$\hat{\mathbf{w}}$ and $\vec{b}$ are the free parameters of the network. The idea behind NNs and Deep Learning in
+general is to find the set of free parameters that best describes the input data: through the process of training, such
+parameters are updated until they become suitable to describe the input dataset $\mathcal{D}$.
+
+
+\subsection{Activation functions}
+
+Taking up the perceptron again, it has been said that its output is binary, meaning either $0$ or $1$. Imagine building
+a NN using neurons following the perceptron model: to state whether the network has successfully learned the input
+dataset it is necessary to associate an error estimation to the predicted model. As a matter of fact, the network is
+well-performing if small changes in the model lead to small output changes. However, the smallest output change when
+considering a perceptron is $1$ and it is also the only possible change. For this particular reason, the perceptron is
+not a good neuron model when building a learning network. 
+
+To overcome the discreteness of the output, activation functions are introduced. The activation function of a node
+defines the output of that particular node given the set of inputs. The perceptron can be thought of as a neuron using a
+step (or Heaviside) activation function. More clever choices of activations are, instead, the so-called "nonlinearities"
+and are, indeed, non-linear functions. The most used activation functions, along with the Heaviside step, are
+represented in \autoref{fig:activation}.
+
+\begin{figure}[t]
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering 
+        \input{Tikz/step.tex}
+        \caption{Heaviside}
+        \label{fig:activation:a}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering 
+        \input{Tikz/sigmoid.tex}
+        \caption{Sigmoid}
+        \label{fig:activation:b}
+    \end{subfigure}%
+    \\
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering 
+		  \input{Tikz/tanh.tex}
+        \caption{Hyperbolic tangent}
+        \label{fig:activation:c}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering 
+        \input{Tikz/relu.tex}
+        \caption{Rectified linear unit}
+        \label{fig:activation:d}
+    \end{subfigure}%
+    \caption{Examples of the most used activation functions}
+    \label{fig:activation}
+\end{figure}
+
+The sigmoid, or logistic activation function, (\autoref{fig:activation:b}) is probably the most famous of all. The main
+reason why it is so widely used is that it returns values between $0$ and $1$. Therefore, since the probability
+exists only in that specific range, it is especially used for models predicting a certain probability, given by network
+output. Similarly, another possible choice is the hyperbolic tangent (\autoref{fig:activation:c}): the advantage over
+the sigmoid is that negative inputs are mapped strongly negative and zero inputs are mapped near zero. The ReLU
+activation (\autoref{fig:activation:d}), on the other hand, appears to have a completely different shape compared to the
+previous. Moreover, it is not limited, ranging from $0$ to infinity. The downside of this particular activation is the
+inappropriate mapping of negative values, since it turns every negative input value into zero. 
+
+It has to be stressed that selecting the right activation function is crucial in order to achieve excellent results and speed
+up the computation. For this reason, it is useful to use different activation functions among the layers, depending on
+the particular layer purpose.
+
+\subsection{Loss function}
+
+In the context of algorithmic optimization, the function implemented to evaluate a candidate solution (i.e. a set of
+parameters) is called objective function. Such function is either maximized or minimized, meaning that the optimization
+search converges to the candidate solution that evaluates to the higher or lower value of the objective function
+respectively. In the context of neural networks, the objective function is often referred to as "loss" function or
+"cost" function, as it is more common to seek to minimize the error of the network. As a matter of fact, the loss
+function serves the purpose of quantifying how much the network predictions are wrong: the set free parameters
+$(\hat{\mathbf{w}},\,\vec{b})$ that evaluates to the minimum of the loss function are chosen to be the best parameters
+of the network. Some of the most used cost functions are the Mean Absolute Error, Mean Square Error, Cross Entropy Loss
+and KL Divergence. However, when dealing with a very specific problem it is suggested to build a loss function ad hoc
+for that particular work. 

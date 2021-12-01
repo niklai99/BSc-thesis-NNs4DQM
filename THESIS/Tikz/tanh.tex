@@ -1,0 +1,23 @@
+\begin{tikzpicture}[scale=0.70]
+    \begin{axis}[
+        width=10cm, height=7cm,
+        xmin=-5, xmax=5,
+        ymin=-1.5, ymax=1.5, 
+        grid, 
+        xlabel=$x$, ylabel=$\sigma(x)$,
+        xtick = {-4.0,-2.0,0,2.0,4.0},
+        ytick = {-1.5,-1.0,...,1.5},
+        y tick label style={/pgf/number format/.cd,%
+                fixed,
+                fixed zerofill,
+                precision=1},
+        x tick label style={/pgf/number format/.cd,%
+                fixed,
+                fixed zerofill,
+                precision=1}
+        ]
+        
+        \addplot[line width=2.pt,color=red]{tanh(x)};
+    
+    \end{axis}
+\end{tikzpicture}

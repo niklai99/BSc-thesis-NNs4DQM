@@ -1,0 +1,111 @@
+\setcounter{chapter}{4}
+\chapter*{Conclusions and Future Outlook}
+\addcontentsline{toc}{chapter}{Conclusions and Future Developments} \markboth{CONCLUSIONS}{}
+\label{chap:Conclusions}
+
+% \section{Future developments}
+
+We dedicate this last chapter to quickly run through again our data quality monitoring concept and goal, and assess what
+this thesis work had achieved and what is still missing out. 
+
+% \setcounter{section}{0}
+% \section{Results overview}
+
+This thesis work has seen the implementation of a deep learning algorithm, usually employed to search for new physics at
+LHC, to perform data quality monitoring. The results are indeed auspicious. We have shown that the neural network
+successfully discriminates between good data and poor data. However, there are some issues we need to address.
+Fortunately, though, it seems we could have solutions for most of them. Further work will be carried out starting from
+this thesis, as it only proved that our initial ideas could be made concrete. 
+
+\setcounter{section}{0}
+\section{Automated monitoring}
+
+The first target of this work was to minimize the human efforts in data quality monitoring tasks. At this stage, a
+significant amount of human-performed work is necessary. However, this thesis laid the foundations for significant
+improvements. 
+
+Instead of having the scientist analyze the observed test statistic $t_{\text{obs}}$ at the end of the
+monitoring process and evaluate the quality of data, we would have the algorithm do it automatically. Namely, the idea
+could be to set two threshold values: the first one dividing the \textit{acceptable} $t_{\text{obs}}$ from the
+\textit{discrepant} $t_{\text{obs}}$ while the second one dividing the latter and the \textit{critical}
+$t_{\text{obs}}$. In other words, the two thresholds would define three regions in the space of the test statistic.
+Depending on which region the $t_{\text{obs}}$ belongs to, the algorithm would act in different ways: from just raising
+a warning to taking concrete actions towards the experimental setup. 
+
+However, to make this automated monitoring reliable, we must set meaningful and quantitative threshold values. The
+initial idea was to put those thresholds to the observed \textit{p}-value. As reported in \autoref{sec:disc_ass},
+though, we cannot make this idea concrete as for now. The alternative could be to put thresholds on the distance of
+$t_{\text{obs}}$ from the median $\tilde{t}$, though it does not seem satisfactory. Of even more importance, we would
+like to have threshold values that are as more universal as possible. Namely, we aim at having thresholds that do not
+depend (as far as possible) on the network's architecture and hyperparameters. It is a solid reason to consider median
+thresholds unsatisfactory, as they directly depend on the network's degrees of freedom. Moreover, through the numerous
+tests that we ran throughout this work, we noticed that the observed $t_{\text{obs}}$ value is somehow unstable. In
+other words, if we feed to the network $N$ data sub-samples (instead of just one), we would find a distribution of
+$t_{\text{obs}}$ (the procedure is analogous to the tuning of the network). Its median could be used as an estimate of
+the overall observed test statistic and compared to the $p(t\,|\,\mathbfcal{R})$ distribution. However, if the algorithm
+detects a discrepancy in the data samples, the $t_{\text{obs}}$ distribution will not follow a $\chi^2_{\nu}$
+distribution. Instead, we found that the $t_{\text{obs}}$ distribute themselves following an approximate uniform
+distribution with considerable variance. Thus, even using data from the same run, the results are very variable and make
+it difficult to choose appropriate threshold values. 
+
+A possible solution could be to have a more flexible neural network, and we thought of two possible implementations. The
+first one involves the employment of multiple reference samples. Namely, suppose the algorithm knows better what we
+label as \textit{good} run (by seeing more of them). In that case, it could have an improved evaluation of the test
+statistic and thus a more stable and reliable output. Possibly, this improvement could also lead to a reduction of the
+observed $t_{\text{obs}}$ values, making it possible to exploit the \textit{p}-value discrepancy assessment. However, a
+more straightforward solution could be to increase the network's complexity. This way, the algorithm would have an
+enhanced expressive power and could increase output reliability. Moreover, as shown in \autoref{sec:nnreco}, a more
+complex architecture could increase the network's capability of fitting the $n(x\,|\,\widehat{\mathbf{w}}) \, / \,
+n(x\,|\,\mathbfcal{R})$ ratio and thus returning a more aware test statistic $t_{\text{obs}}$.
+
+
+\section{Online monitoring}
+
+Even though increasing the network's complexity seems to solve most of the urging problems we have exposed, a
+substantial drawback cannot be overlooked. 
+
+At the beginning of this chapter, we have stated that our goal is to build an \textit{online} data quality monitoring
+algorithm. By \textit{online} we mean "while the detector is collecting data". The data quality monitoring procedure we
+have in mind is thus the following: 
+
+\begin{enumerate}
+    \item Build a large reference sample using an experimental setup known to give the expected results. 
+    \item Optimize the network's hyperparameters by repeated training on reference sub-samples.
+    \item Start a new detector run, with possible unexplored configurations .
+    \item Begin a single training process as the detector successfully collect enough events to satisfy the
+    $\mathcal{N}_{\R}/\mathcal{N}_{\D}$ ratio used during the network's tuning.
+    \item While training, the detector keeps acquiring data, populating a second data sample.
+    \item The algorithm finishes the training process \textit{before} the second dataset has been completely built.
+    \item As the second dataset has been fully collected, the second training process can begin.
+    \item Repeat the procedure starting from 3.
+\end{enumerate}
+
+The crucial point is expressed in step number $6$: the algorithm training process must be shorter than the time to
+populate the data sample. Unfortunately, in the current implementation, the algorithm is already too slow to be put
+online. Precisely, to process a single dataset with $\mathcal{N}_{\D}=3000$ events against the reference of
+$\mathcal{N}_{\R}=200000$ it takes an average of $47$ minutes, considering the minimum amount of training epochs that
+stabilizes the estimation of the observed $t_{\text{obs}}$. 
+
+Furthermore, using a more complex network architecture would slow down the training process even more, leading to
+a complete incompatibility between having a fully automated monitor and an online DQM procedure. 7
+
+However, a way to achieve both goals may exist. In \cite{falkon} we find an interesting alternative to neural networks:
+kernel methods. Kernel methods are a family of algorithms for pattern analysis and thus are employed to study general
+types of relations in datasets. Usually, these methods do not scale well with the dimensionality of datasets. Though,
+the Nystr\"{o}m approximation solves the problem, as reported in the cited article. The Falkon algorithm can thus be
+implemented to resemble the deep learning model we presented in this thesis and the related articles. The procedures
+introduced do not need to be changed significantly, though there are some differences. For example, using Falkon, the
+$p(t\,|\,\mathbfcal{R})$ will still follow a $\chi^2_{\nu}$ distribution. In this case, however, the degrees of freedom
+are not fixed by the number of trainable parameters like NNs.
+
+Recent studies compare Falkon with our implementation of the algorithm: the overall performance on synthetic datasets
+are almost identical, and the $\chi^2_{\nu}$ distribution followed by $p(t\,|\,\mathbfcal{R})$ with Falkon always
+happens to have a number of degrees of freedom close to the fixed NNs one used for a certain kind of datasets. The
+significant advantage of Falkon's implementations is the run time performance: the same problem a NN can process in a
+few hours can be processed by Falkon in seconds.
+
+Falkon capabilities seem to define the way to go. Future studies will then cover its implementation in data quality
+monitoring procedures following the steps defined by this pilot work. With Falkon, we ultimately aim at fulfilling our
+goals of having a fully automated online data quality monitoring procedure working on our detector. However, we still do
+not have enough information to tell whether Falkon will be enough, thus further tests need to be carried out following
+this direction. 

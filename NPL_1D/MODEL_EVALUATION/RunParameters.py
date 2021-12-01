@@ -23,7 +23,7 @@ class RunParameters:
         self.epochs = int( (self.folder_name.split("E", 1)[1]).split('_')[0] )
         self.latent = int( (self.folder_name.split("latent", 1)[1]).split("_", 1)[0] )
         self.layers = int( (self.folder_name.split("layers", 1)[1]).split("_", 1)[0] )
-        self.w_clip = int( (self.folder_name.split("wclip", 1)[1]).split("_", 1)[0] )
+        self.w_clip = (self.folder_name.split("wclip", 1)[1]).split("_", 1)[0]
         self.toys = int( (self.folder_name.split("toy", 1)[1]).split("_", 1)[0] )
         self.ref = int( (self.folder_name.split("ref", 1)[1]).split("_", 1)[0] )
         self.bkg = int( (self.folder_name.split("bkg", 1)[1]).split("_", 1)[0] )

@@ -1,0 +1,647 @@
+\documentclass{beamer}
+\usetheme{Padova}
+
+\input{Inputs/inputs.tex}
+\usepackage{appendixnumberbeamer}
+\newcommand\Wider[2][3em]{%
+\makebox[\linewidth][c]{%
+  \begin{minipage}{\dimexpr\textwidth+#1\relax}
+  \raggedright#2
+  \end{minipage}%
+  }%
+}
+
+\def\supervisor{Prof. Marco Zanetti}
+
+\title{Predictive Learning applied to \\ Muon Chamber Monitoring}
+\subtitle{Data Quality Monitoring with Neural Networks}
+\author{\texorpdfstring{Candidate: Nicolò Lai \\\vspace{1ex} Supervisor: \supervisor \vspace{3ex}}{}}
+\date{December 14, 2021}
+
+\pgfplotsset{compat=1.16}
+
+\begin{document}
+
+	% --------- TITLE
+	\maketitle
+
+	% --------- INTRODUCTION
+	\section{Introduction}
+	\begin{frame}
+		\frametitle{Introduction}
+		\framesubtitle{Deep learning algorithms for data quality monitoring}
+		
+		\begin{columns}
+			% LEFT COLUMN
+			\begin{column}{0.5\textwidth}
+				Employement of \alert{deep learning} allows for
+				\vspace{1em}
+				\begin{itemize}
+					\setlength{\itemsep}{0.6em}
+					\item Flexibility
+					\item Accuracy
+					\item Automation
+				\end{itemize}
+			\end{column}
+			% RIGHT COLUMN
+			\begin{column}{0.5\textwidth}
+				\begin{figure}
+					\centering 
+					\includegraphics[width=1.0\textwidth]{./Images/deep_learning.jpg}
+				\end{figure}
+			\end{column}
+		\end{columns}
+
+	\end{frame}
+
+	% --------- DETECTOR
+	\section{The Detector}
+
+	% ------ EXPERIMENT CONFIGURATION
+	\begin{frame}
+		\frametitle{The Detector}
+		\framesubtitle{Experimental setup}
+
+		\begin{columns}
+
+			\begin{column}{0.55\framewidth}
+				% --- DETECTOR FIGURE
+				\vspace{-2.5em}
+				\begin{center}
+					\input{Tikz/detector.tex}
+				\end{center}
+
+				% \vfill
+
+			\end{column}
+
+			\begin{column}{0.45\framewidth}
+				\vspace{-5.5em}
+				% --- BULLETPOINTS
+				\begin{itemize}
+					\setlength{\itemsep}{1em}
+					\item 4 muon chambers (\alert{\textit{superlayers}})
+					\item 4 staggered layers of 16 \alert{\textit{drift tubes}} each
+					\item \alert{\textit{trigger-less}} data acquisition system
+					\item 2 \alert{\textit{scintillator}} tiles		
+				\end{itemize}
+				% \vfill
+			\end{column}
+			
+		\end{columns}
+
+		
+		
+	\end{frame}
+
+	% --------- DRIFT TIME
+	\section{DriftTime}
+	\begin{frame}
+		\frametitle{The Drift Time Distribution}
+		\framesubtitle{Main features of the time box}
+		% --- BULLETPOINTS
+		\begin{alertblock}{}
+			Collection of the times that the electrons take to reach the anodic wire in the center of the cell
+		\end{alertblock}
+		The external trigger 
+		\begin{itemize}
+			\item allows to discriminate \alert{\textit{muon hits}} from background noise
+			\item provides a \alert{\textit{timing reference} $t_0$} for computing the drift time
+		\end{itemize}
+
+		\begin{columns}
+			% LEFT COLUMN
+			\begin{column}{0.5\textwidth}
+				\begin{figure}
+					\centering 
+					\includegraphics[width=1.0\textwidth]{../PLOTS/DRIFT_TIME/thesis/run1252_shifted.pdf}
+				\end{figure}
+			\end{column}
+			% RIGHT COLUMN
+			\begin{column}{0.5\textwidth}
+				Time box shape:
+				\begin{itemize}
+					\item approximately \alert{\textit{uniform}}
+					\item $\sim$\alert{$400\,\si{\nano\second}$} width
+				\end{itemize}
+			\end{column}
+		\end{columns}
+	\end{frame}
+
+	% --------- THE DEEP LEARNING ALGORITHM
+	\section{The Deep Learning Algorithm}
+	\begin{frame}
+		\frametitle{The Deep Learning Algorithm}
+		\framesubtitle{A brief overview}
+		% --- SUMMARY FIGURE
+		\input{Tikz/algo_summary.tex}
+	\end{frame}
+
+	% --------- PROCEDURE
+
+	% ------ TUNING
+	\begin{frame}
+		\frametitle{Tuning the Neural Network}
+		\framesubtitle{Training the network on the reference dataset}
+
+		\begin{columns}
+			% LEFT COLUMN
+			\begin{column}{0.5\textwidth}
+				\begin{alertblock}{Reference sample $\mathbfcal{R}$}
+					\begin{figure}
+						\centering 
+						\includegraphics[width=1.0\textwidth]{./Images/reference.pdf}
+					\end{figure}
+					$\mathcal{N}_{\mathbfcal{R}}=200000$
+				\end{alertblock}
+			\end{column}
+			% RIGHT COLUMN
+			\begin{column}{0.5\textwidth}
+				\begin{alertblock}{Data sample $\mathbfcal{D}$}
+					\begin{figure}
+						\centering 
+						\includegraphics[width=1.0\textwidth]{./Images/sampled_ref.pdf}
+					\end{figure}
+					$\mathcal{N}_{\mathbfcal{D}}=3000$ sampled from $\mathbfcal{R}$
+				\end{alertblock}
+			\end{column}
+		\end{columns}
+	\end{frame}	
+
+	
+
+	% ------ TUNING
+	\begin{frame}
+		\frametitle{Tuning the Neural Network}
+		\framesubtitle{Optimal weight clipping}
+
+		\begin{columns}
+			% LEFT COLUMN
+			\begin{column}{0.5\textwidth}
+				\begin{alertblock}{Test statistic distribution}
+					\begin{figure}
+						\centering 
+						\includegraphics[width=1.0\textwidth]{../PLOTS/DRIFT_TIME/thesis/t_reference.pdf}
+					\end{figure}
+				\end{alertblock}	
+			\end{column}
+			% RIGHT COLUMN
+			\begin{column}{0.5\textwidth}
+				\begin{alertblock}{Quantiles evolution}
+					\begin{figure}
+						\centering 
+						\includegraphics[width=1.0\textwidth]{../PLOTS/DRIFT_TIME/thesis/a_reference_quantiles.pdf}
+					\end{figure}
+				\end{alertblock}
+			\end{column}
+		\end{columns}
+
+		\vfill
+		400 samples of $\mathcal{N}_{\mathbfcal{D}}=3000$ each 
+
+	\end{frame}
+
+
+	% ------ DISTRIBUTIONS
+	\begin{frame}
+		\frametitle{Testing the algorithm performance}
+		\framesubtitle{Drift time distributions}
+
+		\vspace{-1.5em}
+
+		\only{
+			\begin{columns}%[onlytextwidth]
+
+			% LEFT COLUMN
+			\begin{column}{0.5\textwidth}
+
+					\begin{figure}
+						\centering 
+						\includegraphics[width=1.0\textwidth]	{./Images/reference_orange.pdf}
+						\includegraphics[width=1.0\textwidth]{./Images/1265_blue.pdf}
+					\end{figure}
+
+			\end{column}
+
+
+			% RIGHT COLUMN
+			\begin{column}{0.5\textwidth}
+
+					\begin{figure}
+						\centering 
+						\includegraphics[width=1.0\textwidth]{./Images/1253_blue.pdf}
+						\includegraphics[width=1.0\textwidth]{./Images/1242_blue.pdf}
+					\end{figure}
+
+			\end{column}
+		\end{columns}
+		}<1>
+
+		\only{
+			\begin{columns}%[onlytextwidth]
+
+			% LEFT COLUMN
+			\begin{column}{0.5\textwidth}
+
+					\begin{figure}
+						\centering 
+						\includegraphics[width=1.0\textwidth]{./Images/reference_blue.pdf}
+						\includegraphics[width=1.0\textwidth]{./Images/1265_blue.pdf}
+					\end{figure}
+
+			\end{column}
+
+
+			% RIGHT COLUMN
+			\begin{column}{0.5\textwidth}
+
+					\begin{figure}
+						\centering 
+						\includegraphics[width=1.0\textwidth]	{./Images/1253_orange.pdf}
+						\includegraphics[width=1.0\textwidth]{./Images/1242_blue.pdf}
+					\end{figure}
+
+			\end{column}
+		\end{columns}
+		}<2>
+
+		\only{
+			\begin{columns}%[onlytextwidth]
+
+			% LEFT COLUMN
+			\begin{column}{0.5\textwidth}
+
+					\begin{figure}
+						\centering 
+						\includegraphics[width=1.0\textwidth]{./Images/reference_blue.pdf}
+						\includegraphics[width=1.0\textwidth]	{./Images/1265_orange.pdf}
+					\end{figure}
+
+			\end{column}
+
+
+			% RIGHT COLUMN
+			\begin{column}{0.5\textwidth}
+
+					\begin{figure}
+						\centering 
+						\includegraphics[width=1.0\textwidth]{./Images/1253_blue.pdf}
+						\includegraphics[width=1.0\textwidth]{./Images/1242_blue.pdf}
+					\end{figure}
+
+			\end{column}
+		\end{columns}
+		}<3>
+
+		\only{
+			\begin{columns}%[onlytextwidth]
+
+			% LEFT COLUMN
+			\begin{column}{0.5\textwidth}
+
+					\begin{figure}
+						\centering 
+						\includegraphics[width=1.0\textwidth]{./Images/reference_blue.pdf}
+						\includegraphics[width=1.0\textwidth]{./Images/1265_blue.pdf}
+					\end{figure}
+
+			\end{column}
+
+
+			% RIGHT COLUMN
+			\begin{column}{0.5\textwidth}
+
+					\begin{figure}
+						\centering 
+						\includegraphics[width=1.0\textwidth]{./Images/1253_blue.pdf}
+						\includegraphics[width=1.0\textwidth]	{./Images/1242_orange.pdf}
+					\end{figure}
+
+			\end{column}
+		\end{columns}
+		}<4>
+
+		\vfill
+
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Testing the algorithm performance}
+		\framesubtitle{Discrepancy assessment}
+
+		\vspace{-1.5em}
+
+		\only{
+			\begin{figure}
+				\centering 
+				\includegraphics<1>[width=1\textwidth]{../PLOTS/DRIFT_TIME/thesis/t_obs_1.pdf}
+			\end{figure}	 
+		}<1>
+		\only{
+			\begin{figure}
+				\centering 
+				\includegraphics<2>[width=1\textwidth]{../PLOTS/DRIFT_TIME/thesis/t_obs_2.pdf}
+			\end{figure}	 
+		}<2>
+		\only{
+			\begin{figure}
+				\centering 
+				\includegraphics<3>[width=1\textwidth]{../PLOTS/DRIFT_TIME/thesis/t_obs_3.pdf}
+			\end{figure}	 
+		}<3>
+	
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Testing the algorithm performance}
+		\framesubtitle{Neural network's data reconstruction}
+
+		\vspace{-1.5em}
+
+		\Wider{
+			\begin{figure}
+				\centering 
+				\includegraphics[width=0.9\textwidth]{../FALKON/plots/nn_reco.pdf}
+			\end{figure}
+		}
+
+	\end{frame}
+
+
+	% -------- SUMMARY
+	\section{Summary}
+	\begin{frame}
+		\frametitle{Summary of the Results}
+		\framesubtitle{Improving the procedure automation}
+
+		% \onslide<1->
+		The current implementation of the algorithm
+		\begin{itemize}
+			\item correctly detects discrepancies between $\mathbfcal{R}$ and $\mathbfcal{D}$
+			\item returns larger $t_{\text{obs}}$ when the anomalies are more evident
+		\end{itemize}
+
+		\vfill
+
+		% \onslide<2>
+		However
+		\begin{itemize}
+			\item the most critical anomalies are not always the most obvious
+			\item the time box shape may vary for other reasons \\ (e.g. due to correlations with other observables)
+		\end{itemize}
+
+	\end{frame}
+
+
+	% ------------- DRIFT TIME - ANGLE CORRELATION
+	\begin{frame}
+		\frametitle{Example of Correlated Observables}
+		\framesubtitle{Correlation between time box shape and muon crossing angle}
+		
+		\Wider{
+			\begin{figure}
+				\centering 
+				\includegraphics[width=0.9\textwidth]{../FALKON/plots/crossing_angle_corr.pdf}
+			\end{figure}
+		}
+	\end{frame}
+
+
+	% -------- FUTURE DEV
+	\section{Future Developments}
+	\begin{frame}
+		\frametitle{Future Outlook}
+		\framesubtitle{Procedure improvements}
+
+		\begin{enumerate}
+			\item Gathering correlated observables to improve flexibility
+				\begin{itemize}
+					\item multi-dimensional input datasets
+				\end{itemize}
+				\vfill
+			\item Mapping different data anomalies to the corresponding detector failures
+				\begin{itemize}
+					\item systematic study of discrepant data collected with well-known detector setups
+				\end{itemize}
+				\vfill
+			\item Building an \alert{\textit{online}} DQM framework for full automation
+				\begin{itemize}
+					\item the current implementation of the algorithm is too slow 
+					\item FalkonML$^{1}$ can be exploited to emulate our algorithm 
+					\item training time lowers from $\sim 47\,\text{min}$ to $\sim$\alert{$2\,\text{sec}$}
+				\end{itemize}
+		\end{enumerate}
+
+
+		% \vfill
+
+		\scriptsize
+		$^{1}$ GitHub repository: \url{https://github.com/FalkonML/falkon}
+
+		
+	\end{frame}
+
+
+
+
+
+
+	% ------------- BACKUP SLIDES
+	\appendix
+
+	% ------------- FINAL SLIDE
+	\section{Final slide}
+	\begin{frame}
+		\centering
+		\Huge
+		\bfseries
+		{\color{white}
+		Thank you for \\ your attention!}
+	\end{frame}
+
+
+
+	\section{Backup}
+
+
+	% ------------- DRIFT TUBES
+	\begin{frame}
+		\frametitle{Drift Tubes}
+		\framesubtitle{Specifics of the detector elementary cells}
+		\begin{itemize}
+			\item DTs' transverse cross section  is \alert{$L\times h = 42 \times 13 \,\si{\mm}^2$}
+			\item Filled with an \alert{$\text{Ar-CO}_2\,(85/15\,\%)$} gas mixture at $\sim 1\,\text{atm}$
+			\item Precise electrode configuration ensures \alert{$\vec{E}\simeq \text{uniform}$} inside DTs
+			\item Almost \alert{constant drift velocity} $v_{\text{drift}}\approx 54\,\si{\um/\ns}$
+		\end{itemize}
+		% --- DRIFT TUBE FIGURE
+		\begin{center}
+				\input{Tikz/cell.tex}
+		\end{center}
+	\end{frame}
+
+
+
+	% ------------- CONCEPTUAL FOUNDATIONS
+	\begin{frame}
+		\frametitle{Hypothesis testing with NNs}
+		\framesubtitle{Conceptual foundations}
+
+		\begin{itemize}
+			\setlength{\itemsep}{0.6em}
+			\item Null hypothesis $H_0$: \\\vspace{0.2em} 
+			$n\,(x\,|\,\mathbfcal{R})$ $\longrightarrow$ data following
+			the reference model $\mathbfcal{R}$
+			\item Alternative hypothesis $H_1$: \\\vspace{0.2em} 
+			$n\,(x\,|\,\bm{w}) =
+			n\,(x\,|\,\mathbfcal{R})\,e^{f(x;\,\bm{w})}$ $\longrightarrow$ parametrized by the NN
+		\end{itemize}
+
+		\vfill
+
+		The most powerful statistical test is the \alert{likelihood-ratio test} (Neyman-Pearson lemma)
+
+		\vfill
+
+		The algorithm compares $n\,(x\,|\,\mathbfcal{R})$ with $n\,(x\,|\,\bm{\widehat{w}})$ where $\bm{\widehat{w}}$ is
+		the parameters configuration that maximizes the likelihood
+
+
+	\end{frame}
+
+	% ------------- WILKS THEOREM
+	\begin{frame}
+		\frametitle{The Wilks' Theorem}
+		\framesubtitle{Asymptotic distribution of the log-likelihood ratio statistic}
+
+		The test statistic is given by
+
+		\begin{align*}
+			t(\mathbfcal{D}) &= 2 \, \log \left[
+			\frac{
+				e^{-\mathcal{N}(\bm{\widehat{w}})}
+			}{
+				e^{-\mathcal{N}(\mathbfcal{R})}
+			}
+			\prod_{x \in \mathbfcal{D}}
+			\frac{
+				n(x\,|\,\bm{\widehat{w}})  
+			}{
+				n(x\,|\,\mathbfcal{R})
+			}
+		\right] \\
+		& = 
+		-2\,\min_{\bm{w}} 
+		\left[
+			\frac{
+				\mathcal{N}(\mathbfcal{R})
+			}{
+				\mathcal{N}_{\mathbfcal{R}}
+			}
+			\sum_{x \in \mathbfcal{R}}
+			\left(
+				e^{\,f(x;\,\bm{{w}})} - 1
+			\right)
+			- \sum_{x \in \mathbfcal{D}}  f(x;\,\bm{{w}})
+		\right] 
+		\end{align*}
+
+		\vfill
+
+		Wilks' theorem states that the $t(\mathbfcal{D})$ distribution asymptotically approaches a \alert{$\chi^2$
+		distribution} under the null hypothesis $H_0$
+
+		
+	\end{frame}
+
+	% ------ TUNING
+	\begin{frame}
+		\frametitle{Tuning the Neural Network}
+		\framesubtitle{Testing different weight clipping values}
+
+		\vspace{-2em}
+
+		\Wider{
+
+			\begin{columns}[onlytextwidth]
+
+				% LEFT COLUMN
+				\begin{column}{0.33\textwidth}
+
+						\begin{figure}
+							\centering 
+							\includegraphics[width=1.0\textwidth]{../PLOTS/DRIFT_TIME/thesis/a_distribution_1_0.pdf}
+							\includegraphics[width=1.0\textwidth]{../PLOTS/DRIFT_TIME/thesis/a_quantiles_1_0.pdf}
+						\end{figure}
+
+				\end{column}
+
+				% MIDDLE COLUMN
+				\begin{column}{0.33\textwidth}
+
+						\begin{figure}
+							\centering 
+							\includegraphics[width=1.0\textwidth]{../PLOTS/DRIFT_TIME/thesis/a_distribution_50_0.pdf}
+							\includegraphics[width=1.0\textwidth]{../PLOTS/DRIFT_TIME/thesis/a_quantiles_50_0.pdf}
+						\end{figure}
+
+				\end{column}
+
+
+				% RIGHT COLUMN
+				\begin{column}{0.33\textwidth}
+
+						\begin{figure}
+							\centering 
+							\includegraphics[width=1.0\textwidth]{../PLOTS/DRIFT_TIME/thesis/a_distribution_100_0.pdf}
+							\includegraphics[width=1.0\textwidth]{../PLOTS/DRIFT_TIME/thesis/a_quantiles_100_0.pdf}
+						\end{figure}
+
+				\end{column}
+			\end{columns}
+
+		}
+
+	\end{frame}
+
+
+	% ------------- FALKONML
+	\begin{frame}
+		\frametitle{FalkonML}
+		\framesubtitle{Data quality monitoring with kernel methods}
+
+		Kernel methods:
+		\begin{itemize}
+			\item $\widehat{f}(x)=\sum_{i}\alpha_i k(x,\,x_i)$ where $k(x,\,x')=\exp(\frac{||x-x'||^2}{2\sigma^2})$
+		\end{itemize}
+
+		\vfill
+
+		FalkonML:
+		\begin{itemize}
+			\setlength{\itemsep}{0.7em}
+			\item implements the \alert{Nystr\"{o}m approximation} \\\vspace{0.2em}
+			$\widehat{f}(x)=\sum_{i}\alpha_i k(x,\,\widetilde{x}_i)$ where $\{\widetilde{x}_i\}_{i=1}^{m} \subset
+			\{x_i\}_{i=1}^{n}$
+			\item uses the \alert{logistic loss function} \\\vspace{0.2em}
+			$L[f] = \frac{
+				\mathcal{N}(\mathbfcal{R})
+			}{
+				\mathcal{N}_{\mathbfcal{R}}
+			}
+			(1-y)
+			\log(1+e^{f(x;\,\bm{{w}})})
+			+ y\log(1+e^{-f(x;\,\bm{{w}})})
+			$
+			\item the test statistic $t(\mathbfcal{D})$ is computed using $f(x;\,\bm{\widehat{w}})$
+			
+		\end{itemize}
+
+		\vfill
+
+		
+
+		
+	\end{frame}
+
+\end{document}

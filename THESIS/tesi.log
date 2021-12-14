@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/W32TeX) (preloaded format=pdflatex 2018.11.23)  29 NOV 2021 11:04
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/W32TeX) (preloaded format=pdflatex 2018.11.23)  8 DEC 2021 18:16
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1149,14 +1149,7 @@ File: pgflibraryshapes.misc.code.tex 2013/07/18 v3.0.1a (rcs-revision 1.5)
 Package hyperref Info: Option `colorlinks' set `true' on input line 11.
  (d:/Programmi/texlive/2018/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
-)
-
-Package Fancyhdr Warning: \fancyhead's `E' option without twoside option is useless on input line 33.
-
-
-Package Fancyhdr Warning: \fancyhead's `E' option without twoside option is useless on input line 34.
-
-) (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/TeX/newcommands.tex) (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/tesi.aux)
+)) (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/TeX/newcommands.tex) (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/tesi.aux)
 \openout1 = `tesi.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 9.
@@ -1237,7 +1230,7 @@ Package pgfplots notification 'compat/show suggested version=true': you might be
 * paper: a4paper
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
-* modes: 
+* modes: twoside 
 * h-part:(L,W,R)=(56.9055pt, 483.69687pt, 56.9055pt)
 * v-part:(T,H,B)=(56.9055pt, 731.23584pt, 56.9055pt)
 * \paperwidth=597.50787pt
@@ -1251,7 +1244,7 @@ Package pgfplots notification 'compat/show suggested version=true': you might be
 * \headsep=19.8738pt
 * \topskip=11.0pt
 * \footskip=27.46295pt
-* \marginparwidth=53.0pt
+* \marginparwidth=106.0pt
 * \marginparsep=7.0pt
 * \columnsep=10.0pt
 * \skip\footins=10.0pt plus 4.0pt minus 2.0pt
@@ -1259,8 +1252,8 @@ Package pgfplots notification 'compat/show suggested version=true': you might be
 * \voffset=0.0pt
 * \mag=1000
 * \@twocolumnfalse
-* \@twosidefalse
-* \@mparswitchfalse
+* \@twosidetrue
+* \@mparswitchtrue
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
@@ -1283,16 +1276,31 @@ File: uni-0.def 2013/05/13 UCS: Unicode data U+0000..U+00FF
 
 
 
-{d:/Programmi/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/Images/frontespizio/UNIPD.png>]) (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/TeX/abstract.tex) [1] (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/tesi.toc)
+{d:/Programmi/texlive/2018/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/Images/frontespizio/UNIPD.png>]) [2
+
+
+] (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/TeX/abstract.tex) [1]pdfTeX warning (ext4): destination with the same identifier (name{page.}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.18 ...learpage{\pagestyle{empty}\cleardoublepage
+                                                  } [2
+
+
+] (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/tesi.toc)
 \tf@toc=\write5
 \openout5 = `tesi.toc'.
 
 pdfTeX warning (ext4): destination with the same identifier (name{page.}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.21     \clearpage
-                   {\pagestyle{empty}\cleardoublepage} [2
+l.22     \clearpage
+                   {\pagestyle{empty}\cleardoublepage} [3
 
+]pdfTeX warning (ext4): destination with the same identifier (name{page.}) has been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.22 ...learpage{\pagestyle{empty}\cleardoublepage
+                                                  } [4
 
 
 ] (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/TeX/introduzione.tex
@@ -1303,92 +1311,93 @@ Underfull \hbox (badness 10000) in paragraph at lines 19--23
 ) [1
 
 
+] [2
 
 
 ] (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/TeX/experiment.tex
 Chapter 1.
-(d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/Tikz/detector.tex) [2
-
-
+(d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/Tikz/detector.tex) [3
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 80--87
 
  []
 
-[3]
-<./Images/experiment/RUN1252_both.pdf, id=111, 1011.78pt x 578.16pt>
+[4]
+<./Images/experiment/RUN1252_both.pdf, id=126, 1011.78pt x 578.16pt>
 File: ./Images/experiment/RUN1252_both.pdf Graphic file (type pdf)
 <use ./Images/experiment/RUN1252_both.pdf>
 Package pdftex.def Info: ./Images/experiment/RUN1252_both.pdf  used on input line 131.
 (pdftex.def)             Requested size: 338.58632pt x 193.47527pt.
-) [4 <./Images/experiment/RUN1252_both.pdf>] (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/TeX/algorithm_test.tex
+) [5 <./Images/experiment/RUN1252_both.pdf>] [6
+
+
+] (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/TeX/algorithm_test.tex
 Chapter 2.
 LaTeX Font Info:    Try loading font information for U+eus on input line 49.
 (d:/Programmi/texlive/2018/texmf-dist/tex/latex/amsfonts/ueus.fd
 File: ueus.fd 2013/01/14 v3.01 Euler Script
-) [5
+) [7
 
-
-
-] [6] (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/Tikz/algo_summary.tex
-<../PLOTS/DISTRIBUTIONS/ref.pdf, id=208, 1011.78pt x 578.16pt>
+] [8] (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/Tikz/algo_summary.tex
+<../PLOTS/DISTRIBUTIONS/ref.pdf, id=227, 1011.78pt x 578.16pt>
 File: ../PLOTS/DISTRIBUTIONS/ref.pdf Graphic file (type pdf)
 <use ../PLOTS/DISTRIBUTIONS/ref.pdf>
 Package pdftex.def Info: ../PLOTS/DISTRIBUTIONS/ref.pdf  used on input line 65.
 (pdftex.def)             Requested size: 145.11053pt x 82.91797pt.
-<../PLOTS/DISTRIBUTIONS/exp.pdf, id=209, 1011.78pt x 578.16pt>
+<../PLOTS/DISTRIBUTIONS/exp.pdf, id=228, 1011.78pt x 578.16pt>
 File: ../PLOTS/DISTRIBUTIONS/exp.pdf Graphic file (type pdf)
 <use ../PLOTS/DISTRIBUTIONS/exp.pdf>
 Package pdftex.def Info: ../PLOTS/DISTRIBUTIONS/exp.pdf  used on input line 65.
 (pdftex.def)             Requested size: 145.11053pt x 82.91797pt.
-<../PLOTS/NPL_1D/MODEL_EVALUATION/log_ratio_47.pdf, id=210, 1011.78pt x 578.16pt>
-File: ../PLOTS/NPL_1D/MODEL_EVALUATION/log_ratio_47.pdf Graphic file (type pdf)
-<use ../PLOTS/NPL_1D/MODEL_EVALUATION/log_ratio_47.pdf>
-Package pdftex.def Info: ../PLOTS/NPL_1D/MODEL_EVALUATION/log_ratio_47.pdf  used on input line 65.
+<../PLOTS/DISTRIBUTIONS/log_ratio_47.pdf, id=229, 1011.78pt x 578.16pt>
+File: ../PLOTS/DISTRIBUTIONS/log_ratio_47.pdf Graphic file (type pdf)
+<use ../PLOTS/DISTRIBUTIONS/log_ratio_47.pdf>
+Package pdftex.def Info: ../PLOTS/DISTRIBUTIONS/log_ratio_47.pdf  used on input line 65.
 (pdftex.def)             Requested size: 145.11053pt x 82.91797pt.
-<../PLOTS/NPL_1D/MODEL_EVALUATION/summary_distribution.pdf, id=211, 867.24pt x 505.89pt>
-File: ../PLOTS/NPL_1D/MODEL_EVALUATION/summary_distribution.pdf Graphic file (type pdf)
-<use ../PLOTS/NPL_1D/MODEL_EVALUATION/summary_distribution.pdf>
-Package pdftex.def Info: ../PLOTS/NPL_1D/MODEL_EVALUATION/summary_distribution.pdf  used on input line 65.
+<../PLOTS/DISTRIBUTIONS/summary_distribution.pdf, id=230, 867.24pt x 505.89pt>
+File: ../PLOTS/DISTRIBUTIONS/summary_distribution.pdf Graphic file (type pdf)
+<use ../PLOTS/DISTRIBUTIONS/summary_distribution.pdf>
+Package pdftex.def Info: ../PLOTS/DISTRIBUTIONS/summary_distribution.pdf  used on input line 65.
 (pdftex.def)             Requested size: 145.11053pt x 84.64157pt.
-)) [7 <../PLOTS/DISTRIBUTIONS/ref.pdf> <../PLOTS/DISTRIBUTIONS/exp.pdf
+)) [9 <../PLOTS/DISTRIBUTIONS/ref.pdf> <../PLOTS/DISTRIBUTIONS/exp.pdf
 
 pdfTeX warning: pdflatex.exe (file ../PLOTS/DISTRIBUTIONS/exp.pdf): PDF inclusion: multiple pdfs with page group included in a single page
-> <../PLOTS/NPL_1D/MODEL_EVALUATION/log_ratio_47.pdf
+> <../PLOTS/DISTRIBUTIONS/log_ratio_47.pdf
 
-pdfTeX warning: pdflatex.exe (file ../PLOTS/NPL_1D/MODEL_EVALUATION/log_ratio_47.pdf): PDF inclusion: multiple pdfs with page group included in a single page
-> <../PLOTS/NPL_1D/MODEL_EVALUATION/summary_distribution.pdf
+pdfTeX warning: pdflatex.exe (file ../PLOTS/DISTRIBUTIONS/log_ratio_47.pdf): PDF inclusion: multiple pdfs with page group included in a single page
+> <../PLOTS/DISTRIBUTIONS/summary_distribution.pdf
 
-pdfTeX warning: pdflatex.exe (file ../PLOTS/NPL_1D/MODEL_EVALUATION/summary_distribution.pdf): PDF inclusion: multiple pdfs with page group included in a single page
->] (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/TeX/results.tex
+pdfTeX warning: pdflatex.exe (file ../PLOTS/DISTRIBUTIONS/summary_distribution.pdf): PDF inclusion: multiple pdfs with page group included in a single page
+>] [10
+
+
+] (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/TeX/results.tex
 Chapter 3.
-[8
-
-
+[11
 
 ]
-<./Images/experiment/RUN1252.pdf, id=329, 1011.78pt x 578.16pt>
+<./Images/experiment/RUN1252.pdf, id=352, 1011.78pt x 578.16pt>
 File: ./Images/experiment/RUN1252.pdf Graphic file (type pdf)
 <use ./Images/experiment/RUN1252.pdf>
 Package pdftex.def Info: ./Images/experiment/RUN1252.pdf  used on input line 61.
 (pdftex.def)             Requested size: 241.84843pt x 138.19662pt.
-<./Images/experiment/RUN1253.pdf, id=330, 1011.78pt x 578.16pt>
+<./Images/experiment/RUN1253.pdf, id=353, 1011.78pt x 578.16pt>
 File: ./Images/experiment/RUN1253.pdf Graphic file (type pdf)
 <use ./Images/experiment/RUN1253.pdf>
 Package pdftex.def Info: ./Images/experiment/RUN1253.pdf  used on input line 68.
 (pdftex.def)             Requested size: 241.84843pt x 138.19662pt.
-<./Images/experiment/RUN1265.pdf, id=331, 1011.78pt x 578.16pt>
+<./Images/experiment/RUN1265.pdf, id=354, 1011.78pt x 578.16pt>
 File: ./Images/experiment/RUN1265.pdf Graphic file (type pdf)
 <use ./Images/experiment/RUN1265.pdf>
 Package pdftex.def Info: ./Images/experiment/RUN1265.pdf  used on input line 75.
 (pdftex.def)             Requested size: 241.84843pt x 138.19662pt.
-<./Images/experiment/RUN1242.pdf, id=332, 1011.78pt x 578.16pt>
+<./Images/experiment/RUN1242.pdf, id=355, 1011.78pt x 578.16pt>
 File: ./Images/experiment/RUN1242.pdf Graphic file (type pdf)
 <use ./Images/experiment/RUN1242.pdf>
 Package pdftex.def Info: ./Images/experiment/RUN1242.pdf  used on input line 81.
 (pdftex.def)             Requested size: 241.84843pt x 138.19662pt.
- [9 <./Images/experiment/RUN1252.pdf> <./Images/experiment/RUN1253.pdf
+ [12 <./Images/experiment/RUN1252.pdf> <./Images/experiment/RUN1253.pdf
 
 pdfTeX warning: pdflatex.exe (file ./Images/experiment/RUN1253.pdf): PDF inclusion: multiple pdfs with page group included in a single page
 > <./Images/experiment/RUN1265.pdf
@@ -1401,33 +1410,33 @@ pdfTeX warning: pdflatex.exe (file ./Images/experiment/RUN1242.pdf): PDF inclusi
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
 Missing character: There is no ; in font nullfont!
-) [10]
-<../PLOTS/DRIFT_TIME/thesis/t_reference.pdf, id=479, 1011.78pt x 578.16pt>
+) [13]
+<../PLOTS/DRIFT_TIME/thesis/t_reference.pdf, id=503, 1011.78pt x 578.16pt>
 File: ../PLOTS/DRIFT_TIME/thesis/t_reference.pdf Graphic file (type pdf)
 <use ../PLOTS/DRIFT_TIME/thesis/t_reference.pdf>
 Package pdftex.def Info: ../PLOTS/DRIFT_TIME/thesis/t_reference.pdf  used on input line 179.
 (pdftex.def)             Requested size: 241.84843pt x 138.19662pt.
-<../PLOTS/DRIFT_TIME/thesis/reference_quantiles.pdf, id=480, 1011.78pt x 578.16pt>
+<../PLOTS/DRIFT_TIME/thesis/reference_quantiles.pdf, id=504, 1011.78pt x 578.16pt>
 File: ../PLOTS/DRIFT_TIME/thesis/reference_quantiles.pdf Graphic file (type pdf)
 <use ../PLOTS/DRIFT_TIME/thesis/reference_quantiles.pdf>
 Package pdftex.def Info: ../PLOTS/DRIFT_TIME/thesis/reference_quantiles.pdf  used on input line 185.
 (pdftex.def)             Requested size: 241.84843pt x 138.19662pt.
-<../PLOTS/DRIFT_TIME/thesis/both_1_0.pdf, id=481, 1011.78pt x 1156.32pt>
+<../PLOTS/DRIFT_TIME/thesis/both_1_0.pdf, id=505, 1011.78pt x 1156.32pt>
 File: ../PLOTS/DRIFT_TIME/thesis/both_1_0.pdf Graphic file (type pdf)
 <use ../PLOTS/DRIFT_TIME/thesis/both_1_0.pdf>
 Package pdftex.def Info: ../PLOTS/DRIFT_TIME/thesis/both_1_0.pdf  used on input line 193.
 (pdftex.def)             Requested size: 120.92421pt x 138.1878pt.
-<../PLOTS/DRIFT_TIME/thesis/both_7_0.pdf, id=482, 1011.78pt x 1156.32pt>
+<../PLOTS/DRIFT_TIME/thesis/both_7_0.pdf, id=506, 1011.78pt x 1156.32pt>
 File: ../PLOTS/DRIFT_TIME/thesis/both_7_0.pdf Graphic file (type pdf)
 <use ../PLOTS/DRIFT_TIME/thesis/both_7_0.pdf>
 Package pdftex.def Info: ../PLOTS/DRIFT_TIME/thesis/both_7_0.pdf  used on input line 199.
 (pdftex.def)             Requested size: 120.92421pt x 138.1878pt.
-<../PLOTS/DRIFT_TIME/thesis/both_50_0.pdf, id=483, 1011.78pt x 1156.32pt>
+<../PLOTS/DRIFT_TIME/thesis/both_50_0.pdf, id=507, 1011.78pt x 1156.32pt>
 File: ../PLOTS/DRIFT_TIME/thesis/both_50_0.pdf Graphic file (type pdf)
 <use ../PLOTS/DRIFT_TIME/thesis/both_50_0.pdf>
 Package pdftex.def Info: ../PLOTS/DRIFT_TIME/thesis/both_50_0.pdf  used on input line 205.
 (pdftex.def)             Requested size: 120.92421pt x 138.1878pt.
-<../PLOTS/DRIFT_TIME/thesis/both_100_0.pdf, id=484, 1011.78pt x 1156.32pt>
+<../PLOTS/DRIFT_TIME/thesis/both_100_0.pdf, id=508, 1011.78pt x 1156.32pt>
 File: ../PLOTS/DRIFT_TIME/thesis/both_100_0.pdf Graphic file (type pdf)
 <use ../PLOTS/DRIFT_TIME/thesis/both_100_0.pdf>
 Package pdftex.def Info: ../PLOTS/DRIFT_TIME/thesis/both_100_0.pdf  used on input line 211.
@@ -1437,7 +1446,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 177--216
 
  []
 
-[11 <../PLOTS/DRIFT_TIME/thesis/t_reference.pdf> <../PLOTS/DRIFT_TIME/thesis/reference_quantiles.pdf
+[14 <../PLOTS/DRIFT_TIME/thesis/t_reference.pdf> <../PLOTS/DRIFT_TIME/thesis/reference_quantiles.pdf
 
 pdfTeX warning: pdflatex.exe (file ../PLOTS/DRIFT_TIME/thesis/reference_quantiles.pdf): PDF inclusion: multiple pdfs with page group included in a single page
 > <../PLOTS/DRIFT_TIME/thesis/both_1_0.pdf
@@ -1457,22 +1466,23 @@ Underfull \hbox (badness 10000) in paragraph at lines 269--277
 
  []
 
-<../PLOTS/DRIFT_TIME/thesis/t_all_advanced.pdf, id=721, 1084.05pt x 578.16pt>
+<../PLOTS/DRIFT_TIME/thesis/t_all_advanced.pdf, id=744, 1084.05pt x 578.16pt>
 File: ../PLOTS/DRIFT_TIME/thesis/t_all_advanced.pdf Graphic file (type pdf)
 <use ../PLOTS/DRIFT_TIME/thesis/t_all_advanced.pdf>
 Package pdftex.def Info: ../PLOTS/DRIFT_TIME/thesis/t_all_advanced.pdf  used on input line 295.
 (pdftex.def)             Requested size: 386.95897pt x 206.37303pt.
-[12] [13 <../PLOTS/DRIFT_TIME/thesis/t_all_advanced.pdf>]
-<../FALKON/plots/nn_reco.pdf, id=784, 1445.4pt x 1011.78pt>
+[15] [16 <../PLOTS/DRIFT_TIME/thesis/t_all_advanced.pdf>]
+<../FALKON/plots/nn_reco.pdf, id=808, 1445.4pt x 1011.78pt>
 File: ../FALKON/plots/nn_reco.pdf Graphic file (type pdf)
 <use ../FALKON/plots/nn_reco.pdf>
 Package pdftex.def Info: ../FALKON/plots/nn_reco.pdf  used on input line 350.
 (pdftex.def)             Requested size: 483.69687pt x 338.58173pt.
-) [14 <../FALKON/plots/nn_reco.pdf>] (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/TeX/conclusioni.tex [15
+) [17 <../FALKON/plots/nn_reco.pdf>] [18
 
 
+] (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/TeX/conclusioni.tex [19
 
-]) [16] (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/TeX/bibliography.tex
+]) [20] (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/TeX/bibliography.tex
 LaTeX Font Info:    Try loading font information for T1+cmtt on input line 7.
  (d:/Programmi/texlive/2018/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
@@ -1481,22 +1491,22 @@ File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 Package caption Warning: Unused \captionsetup[table] on input line 26.
 See the caption package documentation for explanation.
 
-[17
+[21
 
 
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 44.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 44.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 45.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 45.
  (d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/tesi.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 44.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 44.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 44.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 45.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 45.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 45.
  ) 
 Here is how much of TeX's memory you used:
- 45178 strings out of 492649
- 1019837 string characters out of 6128653
- 1166239 words of memory out of 5000000
+ 45182 strings out of 492649
+ 1019759 string characters out of 6128653
+ 1166294 words of memory out of 5000000
  48201 multiletter control sequences out of 15000+600000
  569047 words of font info for 125 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1506,10 +1516,10 @@ pdfTeX warning (dest): name{Hfootnote.2} has been referenced but does not exist,
 pdfTeX warning (dest): name{Hfootnote.1} has been referenced but does not exist, replaced by a fixed one
 
 {d:/Programmi/texlive/2018/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}{d:/Programmi/texlive/2018/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}<d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy6.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy8.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex8.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/euler/eusm10.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbi1440.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx1728.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx2074.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfbx2488.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfti0900.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sfti1095.pfb><d:/Programmi/texlive/2018/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb>
-Output written on d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/tesi.pdf (20 pages, 937575 bytes).
+Output written on d:/GitHub/PredictiveLearning_applied_to_MuonChamberMonitoring/THESIS/tesi.pdf (27 pages, 939341 bytes).
 PDF statistics:
- 1081 PDF objects out of 1200 (max. 8388607)
- 560 compressed objects within 6 object streams
- 86 named destinations out of 1000 (max. 500000)
+ 1109 PDF objects out of 1200 (max. 8388607)
+ 581 compressed objects within 6 object streams
+ 91 named destinations out of 1000 (max. 500000)
  271 words of extra memory for PDF output out of 10000 (max. 10000000)
 

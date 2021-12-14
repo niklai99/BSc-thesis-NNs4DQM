@@ -1,0 +1,9 @@
+\babel@toc {english}{}
+\beamer@sectionintoc {1}{Introduction}{2}{0}{1}
+\beamer@sectionintoc {2}{The Detector}{3}{0}{2}
+\beamer@sectionintoc {3}{DriftTime}{4}{0}{3}
+\beamer@sectionintoc {4}{The Deep Learning Algorithm}{5}{0}{4}
+\beamer@sectionintoc {5}{Summary}{16}{0}{5}
+\beamer@sectionintoc {6}{Future Developments}{18}{0}{6}
+\beamer@sectionintoc {7}{Final slide}{19}{1}{7}
+\beamer@sectionintoc {8}{Backup}{20}{1}{8}

@@ -1,0 +1,66 @@
+\tikzset{circ/.style={circle, inner sep=0pt, minimum size=0.8cm, fill=blue!50, draw=black, text=white, align=center}}
+
+\resizebox{!}{0.35\framewidth}{%
+\begin{tikzpicture}
+
+    % CELL
+    \node(cell){\tikz {\filldraw[very thick,fill=black!5] (0, 0) rectangle ++(7,4);}};
+
+    % WIRE
+    \node(wire)[circ, minimum size=0.3cm, fill=black] at ($(cell.center)$) {};
+    \node(wire-label)[above left = 0.3cm and 0cm of wire, align=center] 
+    {\bfseries\large  anodic wire \\ $V_{\text{wire}}=+3.6\,\si{\kilo\volt}$};
+    \draw[bend right,->, very thick, shorten <=2pt, shorten >=2pt] 
+    (wire-label) to node [auto] {} (wire);
+
+    % LEFT-WALL
+    \node(left-wall)[left=-0.2cm of cell]
+    {\tikz {\filldraw[very thick,fill=red, color=red] (0,0) rectangle (0.2,4);}};
+    \node(left-wall-label)[above left = 0.3cm and 0cm of left-wall, align=center, color=red] 
+    {\bfseries\large  cathodic side-walls \\ $V_{\text{cathod}}=-1.8\,\si{\kilo\volt}$};
+    \draw[bend right,->, very thick, shorten <=2pt, shorten >=2pt, color=red] 
+    (left-wall-label) to node [auto] {} (left-wall);
+
+    % RIGHT-WALL
+    \node(right-wall)[right=-0.2cm of cell]
+    {\tikz {\filldraw[very thick,fill=red, color=red] (0,0) rectangle (0.2,4);}};
+
+    % TOP-WALL
+    \node(top-wall)[above=-0.2cm of cell]
+    {
+        \tikz {
+            \filldraw[very thick,fill=blue, color=blue] (0,0) rectangle ++(1.2,0.2);
+        }
+        \tikz {
+            \filldraw[very thick,fill=blue, color=blue] (0,0) rectangle ++(1.2,0.2);
+        }
+        \tikz {
+            \filldraw[very thick,fill=blue, color=blue] (0,0) rectangle ++(1.2,0.2);
+        }
+        \tikz {
+            \filldraw[very thick,fill=blue, color=blue] (0,0) rectangle ++(1.2,0.2);
+        }
+    };
+    \node(top-wall-label)[above right = 0.3cm and 0.5cm of top-wall, align=center, color=blue] 
+    {\bfseries\large cathodic strips \\ $V_{\text{strip}}=-1.2\,\si{\kilo\volt}$};
+    \draw[bend right,->, very thick, shorten <=2pt, shorten >=2pt, color=blue] 
+    (top-wall-label) to node [auto] {} (top-wall);
+
+    % BOTTOM-WALL
+    \node(bottom-wall)[below=-0.2cm of cell]
+    {
+        \tikz {
+            \filldraw[very thick,fill=blue, color=blue] (0,0) rectangle ++(1.2,0.2);
+        }
+        \tikz {
+            \filldraw[very thick,fill=blue, color=blue] (0,0) rectangle ++(1.2,0.2);
+        }
+        \tikz {
+            \filldraw[very thick,fill=blue, color=blue] (0,0) rectangle ++(1.2,0.2);
+        }
+        \tikz {
+            \filldraw[very thick,fill=blue, color=blue] (0,0) rectangle ++(1.2,0.2);
+        }
+    };
+         
+\end{tikzpicture}}

@@ -25,46 +25,42 @@ def argParser():
 def main(args):
     
     OUTPUT_PATH = str(args.output)
-    
+
     N_TOYS = int(args.toys)
 
     os.system(f'mkdir {OUTPUT_PATH}')
-    
+
     # folder to save the outputs of each condor job (file.out, file.log, file.err)
     label = 'condor_' + OUTPUT_PATH.split("/")[-1] + str(time.time())
     os.system(f'mkdir {label}')
-    
+
     for i in range(N_TOYS):
-        joblabel = str(i)                                                                                                                   
+        joblabel = str(i)
         if not os.path.isfile(f"{OUTPUT_PATH}/{joblabel}.txt"):
-            # src file
-            script_src = open(f"{label}/{joblabel}.src" , 'w')
-            script_src.write("#!/bin/bash\n")
-            script_src.write('eval "$(/lustre/cmswork/nlai/anaconda/bin/conda shell.bash hook)" \n')
-            script_src.write(
-                                f"python {os.getcwd()}/{args.pyscript} -o {OUTPUT_PATH}/{joblabel} \
+            with open(f"{label}/{joblabel}.src" , 'w') as script_src:
+                script_src.write("#!/bin/bash\n")
+                script_src.write('eval "$(/lustre/cmswork/nlai/anaconda/bin/conda shell.bash hook)" \n')
+                script_src.write(
+                                    f"python {os.getcwd()}/{args.pyscript} -o {OUTPUT_PATH}/{joblabel} \
                                 -t {args.toys} -sig {args.signal} -bkg {args.background} -ref {args.reference} \
                                 -epochs {args.epochs} -latsize {args.latsize} -layers {args.layers} \
                                 -wclip {args.weight_clipping} -patience {args.patience}"
-                            )
-            
+                                )
 
-            script_src.close()
+
             os.system(f"chmod a+x {label}/{joblabel}.src") # THIS MAKES THE FILE EXECUTABLE
-            
-            # condor file
-            script_condor = open(f"{label}/{joblabel}.condor", 'w')
-            script_condor.write(f"executable = {label}/{joblabel}.src\n" )
-            script_condor.write("universe = vanilla\n")
-            script_condor.write(f"output = {label}/{joblabel}.out\n" )
-            script_condor.write(f"error =  {label}/{joblabel}.err\n" )
-            script_condor.write(f"log = {label}/{joblabel}.log\n")
-            script_condor.write("+MaxRuntime = 500000\n")
-            script_condor.write("queue\n")
-            script_condor.close()
+
+            with open(f"{label}/{joblabel}.condor", 'w') as script_condor:
+                script_condor.write(f"executable = {label}/{joblabel}.src\n" )
+                script_condor.write("universe = vanilla\n")
+                script_condor.write(f"output = {label}/{joblabel}.out\n" )
+                script_condor.write(f"error =  {label}/{joblabel}.err\n" )
+                script_condor.write(f"log = {label}/{joblabel}.log\n")
+                script_condor.write("+MaxRuntime = 500000\n")
+                script_condor.write("queue\n")
             # condor file submission
             os.system(f"condor_submit {label}/{joblabel}.condor") 
-    
+
     return
             
             

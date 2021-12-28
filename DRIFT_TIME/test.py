@@ -130,30 +130,30 @@ def main(args):
 
     # number of toy samples
     N_TOYS = args.toys
-    
+
     N_Data = args.background      # usually 10'000 -> 3000 for realistic DQM
     N_Ref = args.reference       # usually 200'000 > 60000 for realistic DQM
-    
+
     EPOCHS = args.epochs         # number of epochs 
     LATENT_SIZE = args.latsize   # number of nodes in each hidden layer (what is this?)
     LAYERS = args.layers         # number of hidden layers
-    
+
     PATIENCE = args.patience     # number of epochs between two consecutives saving points
-    
+
     # NN restriction
     WEIGHT_CLIPPING = args.weight_clipping
-    
+
     LABEL = (
         '/E'+str(EPOCHS)+'_latent'+str(LATENT_SIZE)+'_layers'+str(LAYERS)+'_wclip'+str(WEIGHT_CLIPPING)
         +'_ntoy'+str(N_TOYS)+'_ref'+str(N_Ref)+'_bkg'+str(N_Bkg)+'_sig'+str(N_Sig)+'_patience'+str(PATIENCE)
     )
-    
+
     OUTPUT_PATH = make_output_path(OUTPUT_PATH, LABEL)
-    
+
     if not os.path.exists(OUTPUT_PATH):
         os.makedirs(OUTPUT_PATH)
 
-    
+
     # SIGNAL POISSON FLUCTUATIONS
     N_Sig_p = poisson_fluctuation(N_Sig)
 #     print('N_Sig: '+str(N_Sig))
@@ -163,7 +163,7 @@ def main(args):
     N_Bkg_p = poisson_fluctuation(N_Bkg)
 #     print('N_Bkg: '+str(N_Bkg))
 #     print('N_Bkg_Pois: '+str(N_Bkg_p))
-    
+
 
     # build reference and data dataframes
 #     REF_DF = build_data(n_background=N_Ref, n_signal=0)
@@ -174,23 +174,23 @@ def main(args):
     # create target and features
     target = make_target(N_Ref, N_Bkg_p, N_Sig_p)
     feature = make_feature(REF_DF, DATA_DF, target)
-    
+
     # select target and features
     target = feature[:, -1]
     feature = feature[:, :-1]
-   
+
     # normalizzazione
     feature = normalize_dataset(feature, OUTPUT_PATH, LABEL)
-    
+
     # training
 #     batch_size = feature.shape[0]
 #     BSMfinder = NPL_Model_v1(feature.shape[1], LATENT_SIZE, LAYERS, WEIGHT_CLIPPING)
 #     BSMfinder.compile(loss = custom_loss(N_Ref, N_Data),  optimizer = 'adam')
 #     hist = BSMfinder.fit(feature, target, batch_size=batch_size, epochs=EPOCHS, verbose=0, callbacks=[myCallback(EPOCHS, OUTPUT_PATH)],)
-    
+
     batch_size = feature.shape[0]
     n_inputs = feature.shape[1]
-    
+
     NPLModel = ModelBuilder(
                 n_input=n_inputs,
                 latentsize=LATENT_SIZE,
@@ -202,32 +202,30 @@ def main(args):
                 custom_activation_bool=True,       # usa una custom activation per l'output, altrimenti linear
                 custom_const=1                    # parametro della custom activation function 
             )
-    
+
     BSMfinder = NPLModel()
     BSMfinder.compile(loss = custom_loss(N_Ref, N_Data),  optimizer = 'adam')
-    
+
     hist = BSMfinder.fit(
                 feature, target, 
                 batch_size=batch_size, epochs=EPOCHS, 
                 verbose=0, 
                 callbacks=[myCallback(EPOCHS, OUTPUT_PATH)]
             )
-    
-    
-    
+
+
+
     # metrics                                   
     loss = np.array(hist.history['loss'])
-    
+
     # test statistic                                   
     final_loss = loss[-1]
     t_e_OBS = -2*final_loss
-    
+
     # save t                                           
     log_t = OUTPUT_PATH+LABEL+'_t.txt'
-    out = open(log_t,'w')
-    out.write("%f\n" %(t_e_OBS))
-    out.close()
-
+    with open(log_t,'w') as out:
+        out.write("%f\n" %(t_e_OBS))
     # write the loss history    
     log_history = OUTPUT_PATH+LABEL+'_history'+str(PATIENCE)+'.h5'
     f = h5py.File(log_history,"w")
@@ -243,8 +241,8 @@ def main(args):
     with open(log_model, "w") as json_file:
         json_file.write(model_json)
     BSMfinder.save_weights(log_weights)
-    
-    
+
+
     return
 
 

@@ -20,7 +20,7 @@ class StreamReader:
     
     def readStream(self):
         '''legge i dati da cloud veneto'''
-    
+
         # accesso a CVeneto
         print('\nConnecting to CloudVeneto...')
         try:
@@ -35,24 +35,24 @@ class StreamReader:
             print('Unable to establish connection with CloudVeneto')
         else:
             print('Connection with CloudVeneto established correctly')
-            
-            
+
+
         # lettura dei file da CloudVeneto
         print('\nReading data files...')
         self.stream_df = pd.concat(
-                                [
-                                    # legge solo i file in formato .txt anche se nel contenitore ci sono altri tipi di file
-                                    pd.read_csv(s3.open(f, mode='rb')) for f in s3.ls("/RUN00"+str(self.run_number)+"/")[0:self.n_files] if f.endswith('.txt')
-                                ],
-                                ignore_index=True
-                )
+            [
+                pd.read_csv(s3.open(f, mode='rb'))
+                for f in s3.ls("/RUN00" + str(self.run_number) + "/")[
+                    : self.n_files
+                ]
+                if f.endswith('.txt')
+            ],
+            ignore_index=True,
+        )
+
 
         # feedback dei file di dati concatenati
-        if self.n_files == -1:
-            files_read = 'All'
-        else:
-            files_read = str(self.n_files)
-
+        files_read = 'All' if self.n_files == -1 else str(self.n_files)
         print(f'{files_read} data files collected')
 
 

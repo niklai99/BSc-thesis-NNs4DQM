@@ -52,7 +52,7 @@ class DriftTime:
     def select_trigger(self, n: int = -1):
         '''prende solo il canale non fisico associato al trigger e ritorna le prime n righe'''
         
-        self.trig = self.stream[(self.stream['TDC_CHANNEL']==128)].iloc[0:n]
+        self.trig = self.stream[(self.stream['TDC_CHANNEL']==128)].iloc[:n]
         self.trig.reset_index(inplace=True, drop=True)
         
     

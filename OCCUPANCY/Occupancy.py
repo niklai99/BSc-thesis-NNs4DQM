@@ -57,9 +57,9 @@ class Occupancy:
     def select_trigger(self, n: int = -1):
         '''prende solo il canale non fisico associato al trigger e ritorna le prime n righe'''
         
-        self.trig = self.stream[(self.stream['TDC_CHANNEL']==128)].iloc[0:n]
+        self.trig = self.stream[(self.stream['TDC_CHANNEL']==128)].iloc[:n]
         self.trig.reset_index(inplace=True, drop=True)
-        
+
         return self.trig
         
         
@@ -157,9 +157,7 @@ class Occupancy:
     def make_rate_histogram(self, hist, run_time):
         '''crea l istogramma della rate'''
         
-        rate_hist = hist / run_time
-        
-        return rate_hist
+        return hist / run_time
     
     
     

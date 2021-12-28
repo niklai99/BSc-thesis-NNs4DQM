@@ -54,13 +54,13 @@ class TDist:
         # inizializzo le liste
         self.t_list=[]
         self.t_list_history=[]
-        
+
         counter=0
         preview=0
-        
+
         # ciclo su tutti i toy
         for i in range(self.toys-preview):
-    
+
             # entro nella output directory, numero magico del toy i-esimo, e prendo il file t
             file_name = (
                 self.OUT_PATH + 
@@ -68,20 +68,17 @@ class TDist:
                 f'E{self.epochs}_latent3_layers1_wclip{self.wclip}_ntoy{self.toys}_ref{self.nref}_bkg{self.nbkg}_sig0_patience1000' + 
                 self.OUT_FILE_t
             )
-            
+
             # controllo se è effettivamente un file esistente
             if os.path.isfile(file_name):
-                # apro il file in read mode
-                f = open(file_name, "r")
-                # leggo cosa c'è scritto e lo inserisco nella lista
-                self.t_list.append(float(f.readline()[:-1]))
-                # chiudo il file
-                f.close()
+                with open(file_name, "r") as f:
+                    # leggo cosa c'è scritto e lo inserisco nella lista
+                    self.t_list.append(float(f.readline()[:-1]))
 #                 print(i)
                 # modo stranissimo per dire che se è andato tutto bene allora aumento il counter
                 if np.logical_not(np.isnan(self.t_list[-1])):
                     counter += 1
-            
+
             # entro nella output directory, numero magico del toy i-esimo, e prendo il file con la storia di t
             history_name = (
                 self.OUT_PATH + 
@@ -89,7 +86,7 @@ class TDist:
                 f'E{self.epochs}_latent3_layers1_wclip{self.wclip}_ntoy{self.toys}_ref{self.nref}_bkg{self.nbkg}_sig0_patience1000' + 
                 self.OUT_FILE_t_history
             )
-            
+
             # controllo se è effettivamente un file esistente
             if os.path.isfile(history_name):
                 # apro il file in read mode
@@ -101,20 +98,19 @@ class TDist:
                     print('Problem with toy ', i)
                 # chiudo il file
                 f.close()
-        
+
         # converto in numpy array 
         self.t_list=np.array(self.t_list)
         self.t_list_history=np.array(self.t_list_history)
-        
+
         # rimuovo nan values
 #         self.t_list = self.t_list[~np.isnan(self.t_list)]
 #         self.t_list_history = self.t_list_history[~np.isnan(self.t_list_history).any(axis=1), :]
-        
 #         self.t_list = self.t_list[self.t_list<40]
 #         self.t_list_history = self.t_list_history[self.t_list_history[:, -1]<40]
-        
+
         print(f"\nToys at disposal/Total toys: {counter}/{self.toys-preview}")
-        
+
         return 
     
     
@@ -179,21 +175,20 @@ class TDist:
 ###########################################################################    
     def thesisPlot(self):
         fig, ax = plt.subplots(nrows=2, figsize=(14,16))
-        
-         # gestione del plot range
+
         XMIN = 0
         if max(self.t_list) >= 3*self.dof:
-            XMAX = max(self.t_list) + min(self.t_list) 
-        elif max(self.t_list) < 3*self.dof:
+            XMAX = max(self.t_list) + min(self.t_list)
+        else:
             XMAX = 3*self.dof
-            
+
         # creo la griglia lungo x
         XGRID = np.linspace(XMIN, XMAX, 500)
-        
+
         # numero di bin da utilizzare
         BINS = self.bins
-        
-        
+
+
         hist, bin_edges = np.histogram(self.t_list, density=True, bins=BINS)
 
         binswidth = bin_edges[1]-bin_edges[0]
@@ -216,7 +211,6 @@ class TDist:
         )
 
         ax[0].errorbar(central_points, hist, yerr=err, color='#009cff', linewidth=2, marker='o', ls='')
-
 #         ax[0].set_title(f'Test statistic distribution', fontsize = 32)
         ax[0].set_xlabel('t', fontsize = 56)
         ax[0].set_ylabel(r'p(t | $\mathcal{R}$)', fontsize = 56)
@@ -231,33 +225,33 @@ class TDist:
 
         ax[0].legend()
         self.change_legend(ax=ax[0], new_loc="upper right", fontsize=44, titlesize=0)
-        
+
         XMIN = 0
         XMAX = self.epochs
-        
+
         YMIN = 0
         YMAX = 24
-            
-            
+
+
         XLIM = [XMIN, XMAX]
         YLIM = [YMIN, YMAX]
-        
+
         # ticks
         x_tics = np.arange(0, self.epochs, self.check_point_t)
 #         print(x_tics)
-        
+
         # quantili
         quantile_list = [0.05,0.25,0.50,0.75,0.95]
         quantile_labels = ["5%", "25%", "50%", "75%", "95%"]
         color_list = ['#00b32a', '#00c282', '#00D2FF', '#009cff', '#005e99']
 #         color_list = list(reversed(color_list))
-        
+
         # quantili teorici
         th_quantile_position = [scipy.stats.chi2.ppf(i, df=self.dof) for i in quantile_list]
-        
+
         # quantili distribuzione
         t_quantile = np.quantile(self.t_list_history[:], quantile_list, axis=0)
-        
+
         # ciclo per plottare i 5 quantili 
         for i in range(len(quantile_list)):
             ax[1].plot(x_tics[:], t_quantile[i][:], 
@@ -275,7 +269,7 @@ class TDist:
                 color=color_list[i],
                 fontsize=44,
                 transform=ax[1].transData)
-        
+
         # plot layout method
         self.plotterLayout(ax=ax[1], xlimits=XLIM, ylimits=YLIM, title='', titlefont=32, xlabel='training epochs', ylabel='t', labelfont=56)
         start, end = ax[1].get_xlim()
@@ -285,7 +279,6 @@ class TDist:
         plt.setp(ax[1].get_xticklabels()[-4], visible=False)
         plt.setp(ax[1].get_xticklabels()[-3], visible=False)
         ax[1].tick_params(axis = 'both', which = 'major', labelsize = 48, direction = 'out', length = 5)
-        
 #         ax[1].set_title("Quantiles evolution", fontsize=32)
         ax[1].set_xlabel('training epochs', fontsize = 56)
         ax[1].set_ylabel('t', fontsize = 56)
@@ -300,21 +293,20 @@ class TDist:
         '''grafico della distribuzione dei t'''
         
         fig, ax = plt.subplots(figsize=(14,8))
-        
-         # gestione del plot range
+
         XMIN = 0
         if max(self.t_list) >= 3*self.dof:
-            XMAX = max(self.t_list) + min(self.t_list) 
-        elif max(self.t_list) < 3*self.dof:
+            XMAX = max(self.t_list) + min(self.t_list)
+        else:
             XMAX = 3*self.dof
-            
+
         # creo la griglia lungo x
         XGRID = np.linspace(XMIN, XMAX, 500)
-        
+
         # numero di bin da utilizzare
         BINS = self.bins
-        
-        
+
+
         hist, bin_edges = np.histogram(self.t_list, density=True, bins=BINS)
 
         binswidth = bin_edges[1]-bin_edges[0]
@@ -354,35 +346,27 @@ class TDist:
         self.change_legend(ax=ax, new_loc="upper right", fontsize=22, titlesize=0)
         if self.save_flag:
             fig.savefig(f"/lustre/cmswork/nlai/PLOTS/DRIFT_TIME/thesis/distribution_{self.wclip}.pdf", dpi = 300, facecolor='white')
-        
+
         plt.show()
-        
 #         # gestione del plot range
 #         XMIN = 0
 #         if max(self.t_list) >= 3*self.dof:
 #             XMAX = max(self.t_list) + min(self.t_list) 
 #         elif max(self.t_list) < 3*self.dof:
 #             XMAX = 3*self.dof
-            
 #         XLIM = [XMIN, XMAX]
-        
 #         # creo la griglia lungo x
 #         XGRID = np.linspace(XMIN, XMAX, 500)
-        
 #         # numero di bin da utilizzare
 #         BINS = self.bins
-        
 #         # fit della distribuzione con un chi2
 #         fit_par = scipy.stats.chi2.fit(self.t_list, floc=0, fscale=1)
-        
 #         # creo figure&axes
 #         fig, ax = plt.subplots(figsize=(14,8))
-        
 #         # istogramma della distrubuzione dei t
 #         ax = sns.histplot(x=self.t_list, bins=BINS, 
 #                           stat='density', element='bars', fill=True, color='#aadeff', edgecolor='#009cff', 
 #                           label='t distribution')
-        
 #         # parte di codice per aggiungere l'incertezza ai bin 
 #         hist, bin_edges = np.histogram(self.t_list, density=True, bins=BINS)
 #         binswidth = bin_edges[1]-bin_edges[0]
@@ -394,26 +378,20 @@ class TDist:
 #         err = np.sqrt(hist/(self.t_list.shape[0]*binswidth))
 #         # grafico delle incertezze sui bin 
 #         ax.errorbar(central_points, hist, yerr = err, color='#009cff', marker='o', ls='')
-        
 #         # grafico della distribuzione teorica del chi2
 #         ax.plot(XGRID,scipy.stats.chi2.pdf(XGRID, df=self.dof), 
 #                 color='#00FF00', linestyle='solid', linewidth=5, alpha=0.6, 
 #                 label=f'theoretical distribution, dof: {self.dof}')
-        
 #         # grafico del fit della distribuzione 
 #         ax.plot(XGRID, scipy.stats.chi2.pdf(XGRID, *fit_par), 
 #                 color='#FF0000', linestyle='solid', linewidth=5, alpha=0.6, 
 #                 label=f'fitted chi2, dof: '+format(fit_par[0],'1.4f'))
-        
-        
 #         self.plotterLayout(ax=ax, xlimits=XLIM, title='t distribution', titlefont=18, xlabel='t', ylabel='density', labelfont=16)
-        
 #         # gestione della legenda
 #         ax.legend()
 #         handles, labels = ax.get_legend_handles_labels()
 #         ax.legend([handles[idx] for idx in [2, 0, 1]], [labels[idx] for idx in [2, 0, 1]])
 #         self.change_legend(ax=ax, new_loc="upper right", fontsize=14, titlesize=16)
-        
 #         fig.tight_layout()
 #         if self.save_flag:
 #             fig.savefig(self.plotOutPath()+'_distribution.png', dpi = 300, facecolor='white')
@@ -431,30 +409,30 @@ class TDist:
         # gestione del plot range
         XMIN = 0
         XMAX = self.epochs
-        
+
         YMIN = 0
         if max(self.t_list) >= 3*self.dof:
-            YMAX = max(self.t_list) + min(self.t_list) 
-        elif max(self.t_list) < 3*self.dof:
+            YMAX = max(self.t_list) + min(self.t_list)
+        else:
             YMAX = 3*self.dof
-            
+
         XLIM = [XMIN, XMAX]
         YLIM = [YMIN, YMAX]
-        
+
         # creo figura e axes
         fig, ax = plt.subplots(figsize=(12,7))
-        
+
         # ticks dell'asse x
         x_tics = np.array(range(self.epochs))
         x_tics = x_tics[x_tics % self.check_point_t == 0]
-        
+
         # ciclo per plottare la storia di tutti i toys
         for i in range(len(self.t_list_history)):
             ax.plot(x_tics[1:], self.t_list_history[i][1:])
-        
+
         # plotter layout method
         self.plotterLayout(ax=ax, xlimits=XLIM, ylimits=YLIM, title='t history', titlefont=18, xlabel='training epoch', ylabel='t', labelfont=16)
-        
+
         fig.tight_layout()
         if self.save_flag:
             fig.savefig(self.plotOutPath()+'_history.png', dpi = 300, facecolor='white')
@@ -730,39 +708,39 @@ class TDist:
         '''andamento della mediana'''
         
         self.median_history = np.median(self.t_list_history, axis=0)
-        
+
         th_median = scipy.stats.chi2.median(df=self.dof)
-        
+
         XMIN = 0
         XMAX = self.epochs
-        
+
         YMIN = 0
         if max(self.median_history) >= 3*self.dof:
-            YMAX = max(self.median_history) + min(self.median_history) 
-        elif max(self.median_history) < 3*self.dof:
+            YMAX = max(self.median_history) + min(self.median_history)
+        else:
             YMAX = 3*self.dof
-            
+
         XLIM = [XMIN, XMAX]
         YLIM = [YMIN, YMAX]
-        
+
         fig, ax = plt.subplots(figsize=(12,7))
-        
+
         x_tics = np.array(range(self.epochs))
         x_tics = x_tics[x_tics % self.check_point_t == 0]
-        
-        
+
+
         ax.plot(x_tics[:],self.median_history[:], color='#009cff', linestyle='solid', linewidth=3, alpha=1, 
                 label=f'median final value: {self.median_history[-1]:.3f}')
-        
+
         ax.hlines(y=th_median, xmin = XMIN, xmax = XMAX, 
                       color = '#FF0000', linestyle='dashed', linewidth = 3, alpha = 0.5, 
                     label = f'theoretical median: {th_median:.3f}')
-        
+
         self.plotterLayout(ax=ax, xlimits=XLIM, ylimits=YLIM, title='median history', titlefont=18, xlabel='training epoch', ylabel='median', labelfont=16)
-        
+
         ax.legend()
         self.change_legend(ax=ax, new_loc="upper right", fontsize=14, titlesize=16)
-    
+
         fig.tight_layout()
         if self.save_flag:
             fig.savefig(self.plotOutPath()+'_median_history.png', dpi = 300, facecolor='white')
